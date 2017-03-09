@@ -15,8 +15,9 @@
 	#include <string.h>
 	#include <stdlib.h>
 	#include <stdio.h>
+	#include "y.tab.h"
 
-	int valorL = 0;
+	//int valorL = 0;
 	long long int contaLinha = 1;
 	long long int contaColuna = 1;
 	long long int commentPos[2];
@@ -100,7 +101,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 "="									{if(valorL==1){printf("ASSIGN\n");}contaColuna+=yyleng;}
 ";"									{if(valorL==1){printf("SEMI\n");}contaColuna+=yyleng;}
 ","									{if(valorL==1){printf("COMMA\n");}contaColuna+=yyleng;}
-[a-zA-Z_$][a-zA-Z0-9_$]*			{if(valorL==1){printf("ID(%s)\n", yytext);}contaColuna+=yyleng;}
+[a-zA-Z_$][a-zA-Z0-9_$]*			{if(valorL==1){printf("ID(%s)\n", yytext);}contaColuna+=yyleng;return ID;}
 "\n"								{contaLinha++;contaColuna=1;}
 "\r"								{contaLinha++;contaColuna=1;}
 "\r\n"								{contaLinha++;contaColuna=1;}
@@ -111,16 +112,11 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 
 
 %%
-int main(int argc, char* argv[])
-{
-  if(argc>1){
-  	if(strcmp(argv[1],"-l") == 0 || strcmp(argv[1],"-1") == 0)
-  		valorL= 1;
-  }
-  yylex();
-  return 0;
-}
 int yywrap()
 {
 return 1;
+}
+
+void yyerror (const char *s) {
+     printf ("%s: %s\n", s, yytext);
 }
