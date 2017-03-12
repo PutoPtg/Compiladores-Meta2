@@ -45,11 +45,99 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ID = 258
+    STRLIT = 258,
+    REALLIT = 259,
+    DECLIT = 260,
+    RESERVED = 261,
+    BOOL = 262,
+    BOOLLIT = 263,
+    CLASS = 264,
+    DO = 265,
+    DOTLENGTH = 266,
+    DOUBLE = 267,
+    ELSE = 268,
+    IF = 269,
+    INT = 270,
+    PARSEINT = 271,
+    PRINT = 272,
+    PUBLIC = 273,
+    RETURN = 274,
+    STATIC = 275,
+    STRING = 276,
+    VOID = 277,
+    WHILE = 278,
+    OCURV = 279,
+    CCURV = 280,
+    OBRACE = 281,
+    CBRACE = 282,
+    OSQUARE = 283,
+    CSQUARE = 284,
+    AND = 285,
+    OR = 286,
+    LT = 287,
+    GT = 288,
+    EQ = 289,
+    NEQ = 290,
+    LEQ = 291,
+    GEQ = 292,
+    PLUS = 293,
+    MINUS = 294,
+    STAR = 295,
+    DIV = 296,
+    MOD = 297,
+    NOT = 298,
+    ASSIGN = 299,
+    SEMI = 300,
+    COMMA = 301,
+    ID = 302
   };
 #endif
 /* Tokens.  */
-#define ID 258
+#define STRLIT 258
+#define REALLIT 259
+#define DECLIT 260
+#define RESERVED 261
+#define BOOL 262
+#define BOOLLIT 263
+#define CLASS 264
+#define DO 265
+#define DOTLENGTH 266
+#define DOUBLE 267
+#define ELSE 268
+#define IF 269
+#define INT 270
+#define PARSEINT 271
+#define PRINT 272
+#define PUBLIC 273
+#define RETURN 274
+#define STATIC 275
+#define STRING 276
+#define VOID 277
+#define WHILE 278
+#define OCURV 279
+#define CCURV 280
+#define OBRACE 281
+#define CBRACE 282
+#define OSQUARE 283
+#define CSQUARE 284
+#define AND 285
+#define OR 286
+#define LT 287
+#define GT 288
+#define EQ 289
+#define NEQ 290
+#define LEQ 291
+#define GEQ 292
+#define PLUS 293
+#define MINUS 294
+#define STAR 295
+#define DIV 296
+#define MOD 297
+#define NOT 298
+#define ASSIGN 299
+#define SEMI 300
+#define COMMA 301
+#define ID 302
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

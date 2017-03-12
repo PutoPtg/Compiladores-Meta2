@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.01
+*Versão 0.02
 ************************************************************************************/
 
 %{
@@ -15,10 +15,52 @@
 	#include "y.tab.h"
 	int yylex(void);
     void yyerror (const char *s);
-
-	int valorL = 0;
 %}
 
+%token STRLIT
+%token REALLIT
+%token DECLIT
+%token RESERVED
+%token BOOL
+%token BOOLLIT
+%token CLASS
+%token DO
+%token DOTLENGTH
+%token DOUBLE
+%token ELSE
+%token IF
+%token INT
+%token PARSEINT
+%token PRINT
+%token PUBLIC
+%token RETURN
+%token STATIC
+%token STRING
+%token VOID
+%token WHILE
+%token OCURV
+%token CCURV
+%token OBRACE
+%token CBRACE
+%token OSQUARE
+%token CSQUARE
+%token AND
+%token OR
+%token LT
+%token GT
+%token EQ
+%token NEQ
+%token LEQ
+%token GEQ
+%token PLUS
+%token MINUS
+%token STAR
+%token DIV
+%token MOD
+%token NOT
+%token ASSIGN
+%token SEMI
+%token COMMA
 %token ID
 
 %%
@@ -29,12 +71,4 @@ expression: ID                          {$$=$1;}
 
 %%
 
-int main(int argc, char* argv[])
-{
-  if(argc>1){
-  	if(strcmp(argv[1],"-l") == 0)
-  		valorL= 1;
-  }
-  yylex();
-  return 0;
-}
+

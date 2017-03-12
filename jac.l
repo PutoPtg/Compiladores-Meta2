@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.0
+*Versão 1.1
 ************************************************************************************/
 
 %X COMMENT
@@ -17,7 +17,7 @@
 	#include <stdio.h>
 	#include "y.tab.h"
 
-	//int valorL = 0;
+	int valorL = 0;
 	long long int contaLinha = 1;
 	long long int contaColuna = 1;
 	long long int commentPos[2];
@@ -49,59 +49,59 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 <STR>{seqEscape}					{contaColuna+=yyleng;}
 <STR>\\.|\\							{printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext);contaColuna+=yyleng; goodSTR=0;}
 <STR><<EOF>>						{contaColuna+=yyleng;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[0]);BEGIN 0;}
-<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1)printf("STRLIT(%s)\n", auxStr);BEGIN 0;}
+<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1)printf("STRLIT(%s)\n", auxStr);BEGIN 0; return STRLIT;}
 <STR>\n|\r|\r\n 					{contaLinha++; contaColuna=1;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]);BEGIN 0;}
 <STR>.								{contaColuna+=yyleng;}
 
-{digito}"."{digito}{expoente}		{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng;}
-{digito}"."({digito}|{expoente})?	{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng;}
-"."{digito}{expoente}?				{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng;}
-{digito}{expoente}					{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng;}
+{digito}"."{digito}{expoente}		{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
+{digito}"."({digito}|{expoente})?	{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
+"."{digito}{expoente}?				{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
+{digito}{expoente}					{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
 
-0|[1-9]+|[1-9]+[0-9_]*[0-9]+		{if(valorL==1){printf("DECLIT(%s)\n", yytext);}contaColuna+=yyleng;}
+0|[1-9]+|[1-9]+[0-9_]*[0-9]+		{if(valorL==1){printf("DECLIT(%s)\n", yytext);}contaColuna+=yyleng; return DECLIT;}
 
-{reserved}							{if(valorL==1){printf("RESERVED(%s)\n", yytext);}contaColuna+=yyleng;}
-"boolean"							{if(valorL==1){printf("BOOL\n");}contaColuna+=yyleng;}
-"true"|"false"						{if(valorL==1){printf("BOOLLIT(%s)\n",yytext);}contaColuna+=yyleng;}
-"class"								{if(valorL==1){printf("CLASS\n");}contaColuna+=yyleng;}
-"do"								{if(valorL==1){printf("DO\n");}contaColuna+=yyleng;}
-".length"							{if(valorL==1){printf("DOTLENGTH\n");}contaColuna+=yyleng;}
-"double"							{if(valorL==1){printf("DOUBLE\n");}contaColuna+=yyleng;}
-"else"								{if(valorL==1){printf("ELSE\n");}contaColuna+=yyleng;}
-"if"								{if(valorL==1){printf("IF\n");}contaColuna+=yyleng;}
-"int"								{if(valorL==1){printf("INT\n");}contaColuna+=yyleng;}
-"Integer.parseInt"					{if(valorL==1){printf("PARSEINT\n");}contaColuna+=yyleng;}
-"System.out.println"				{if(valorL==1){printf("PRINT\n");}contaColuna+=yyleng;}
-"public"							{if(valorL==1){printf("PUBLIC\n");}contaColuna+=yyleng;}
-"return"							{if(valorL==1){printf("RETURN\n");}contaColuna+=yyleng;}
-"static"							{if(valorL==1){printf("STATIC\n");}contaColuna+=yyleng;}
-"String"							{if(valorL==1){printf("STRING\n");}contaColuna+=yyleng;}
-"void"								{if(valorL==1){printf("VOID\n");}contaColuna+=yyleng;}
-"while"								{if(valorL==1){printf("WHILE\n");}contaColuna+=yyleng;}
-"("									{if(valorL==1){printf("OCURV\n");}contaColuna+=yyleng;}
-")"									{if(valorL==1){printf("CCURV\n");}contaColuna+=yyleng;}
-"{"									{if(valorL==1){printf("OBRACE\n");}contaColuna+=yyleng;}
-"}"									{if(valorL==1){printf("CBRACE\n");}contaColuna+=yyleng;}
-"["									{if(valorL==1){printf("OSQUARE\n");}contaColuna+=yyleng;}
-"]"									{if(valorL==1){printf("CSQUARE\n");}contaColuna+=yyleng;}
-"&&"								{if(valorL==1){printf("AND\n");}contaColuna+=yyleng;}
-"||"								{if(valorL==1){printf("OR\n");}contaColuna+=yyleng;}
-"<"									{if(valorL==1){printf("LT\n");}contaColuna+=yyleng;}
-">"									{if(valorL==1){printf("GT\n");}contaColuna+=yyleng;}
-"=="								{if(valorL==1){printf("EQ\n");}contaColuna+=yyleng;}
-"!="								{if(valorL==1){printf("NEQ\n");}contaColuna+=yyleng;}
-"<="								{if(valorL==1){printf("LEQ\n");}contaColuna+=yyleng;}
-">="								{if(valorL==1){printf("GEQ\n");}contaColuna+=yyleng;}
-"+"									{if(valorL==1){printf("PLUS\n");}contaColuna+=yyleng;}
-"-"									{if(valorL==1){printf("MINUS\n");}contaColuna+=yyleng;}
-"*"									{if(valorL==1){printf("STAR\n");}contaColuna+=yyleng;}
-"/"									{if(valorL==1){printf("DIV\n");}contaColuna+=yyleng;}
-"%"									{if(valorL==1){printf("MOD\n");}contaColuna+=yyleng;}
-"!"									{if(valorL==1){printf("NOT\n");}contaColuna+=yyleng;}
-"="									{if(valorL==1){printf("ASSIGN\n");}contaColuna+=yyleng;}
-";"									{if(valorL==1){printf("SEMI\n");}contaColuna+=yyleng;}
-","									{if(valorL==1){printf("COMMA\n");}contaColuna+=yyleng;}
-[a-zA-Z_$][a-zA-Z0-9_$]*			{if(valorL==1){printf("ID(%s)\n", yytext);}contaColuna+=yyleng;return ID;}
+{reserved}							{if(valorL==1){printf("RESERVED(%s)\n", yytext);}contaColuna+=yyleng; return RESERVED;}
+"boolean"							{if(valorL==1){printf("BOOL\n");}contaColuna+=yyleng; return BOOL;}
+"true"|"false"						{if(valorL==1){printf("BOOLLIT(%s)\n",yytext);}contaColuna+=yyleng; return BOOLLIT;}
+"class"								{if(valorL==1){printf("CLASS\n");}contaColuna+=yyleng; return CLASS;}
+"do"								{if(valorL==1){printf("DO\n");}contaColuna+=yyleng; return DO;}
+".length"							{if(valorL==1){printf("DOTLENGTH\n");}contaColuna+=yyleng; return DOTLENGTH;}
+"double"							{if(valorL==1){printf("DOUBLE\n");}contaColuna+=yyleng; return DOUBLE;}
+"else"								{if(valorL==1){printf("ELSE\n");}contaColuna+=yyleng; return ELSE;}
+"if"								{if(valorL==1){printf("IF\n");}contaColuna+=yyleng; return IF;}
+"int"								{if(valorL==1){printf("INT\n");}contaColuna+=yyleng; return INT;}
+"Integer.parseInt"					{if(valorL==1){printf("PARSEINT\n");}contaColuna+=yyleng; return PARSEINT;}
+"System.out.println"				{if(valorL==1){printf("PRINT\n");}contaColuna+=yyleng; return PRINT;}
+"public"							{if(valorL==1){printf("PUBLIC\n");}contaColuna+=yyleng; return PUBLIC;}
+"return"							{if(valorL==1){printf("RETURN\n");}contaColuna+=yyleng; return RETURN;}
+"static"							{if(valorL==1){printf("STATIC\n");}contaColuna+=yyleng; return STATIC;}
+"String"							{if(valorL==1){printf("STRING\n");}contaColuna+=yyleng; return STRING;}
+"void"								{if(valorL==1){printf("VOID\n");}contaColuna+=yyleng; return VOID;}
+"while"								{if(valorL==1){printf("WHILE\n");}contaColuna+=yyleng; return WHILE;}
+"("									{if(valorL==1){printf("OCURV\n");}contaColuna+=yyleng; return OCURV;}
+")"									{if(valorL==1){printf("CCURV\n");}contaColuna+=yyleng; return CCURV;}
+"{"									{if(valorL==1){printf("OBRACE\n");}contaColuna+=yyleng; return OBRACE;}
+"}"									{if(valorL==1){printf("CBRACE\n");}contaColuna+=yyleng; return CBRACE;}
+"["									{if(valorL==1){printf("OSQUARE\n");}contaColuna+=yyleng; return OSQUARE;}
+"]"									{if(valorL==1){printf("CSQUARE\n");}contaColuna+=yyleng; return CSQUARE;}
+"&&"								{if(valorL==1){printf("AND\n");}contaColuna+=yyleng; return AND;}
+"||"								{if(valorL==1){printf("OR\n");}contaColuna+=yyleng; return OR;}
+"<"									{if(valorL==1){printf("LT\n");}contaColuna+=yyleng; return LT;}
+">"									{if(valorL==1){printf("GT\n");}contaColuna+=yyleng; return GT;}
+"=="								{if(valorL==1){printf("EQ\n");}contaColuna+=yyleng; return EQ;}
+"!="								{if(valorL==1){printf("NEQ\n");}contaColuna+=yyleng; return NEQ;}
+"<="								{if(valorL==1){printf("LEQ\n");}contaColuna+=yyleng; return LEQ;}
+">="								{if(valorL==1){printf("GEQ\n");}contaColuna+=yyleng; return GEQ;}
+"+"									{if(valorL==1){printf("PLUS\n");}contaColuna+=yyleng; return PLUS;}
+"-"									{if(valorL==1){printf("MINUS\n");}contaColuna+=yyleng; return MINUS;}
+"*"									{if(valorL==1){printf("STAR\n");}contaColuna+=yyleng; return STAR;}
+"/"									{if(valorL==1){printf("DIV\n");}contaColuna+=yyleng; return DIV;}
+"%"									{if(valorL==1){printf("MOD\n");}contaColuna+=yyleng; return MOD;}
+"!"									{if(valorL==1){printf("NOT\n");}contaColuna+=yyleng; return NOT;}
+"="									{if(valorL==1){printf("ASSIGN\n");}contaColuna+=yyleng; return ASSIGN;}
+";"									{if(valorL==1){printf("SEMI\n");}contaColuna+=yyleng; return SEMI;}
+","									{if(valorL==1){printf("COMMA\n");}contaColuna+=yyleng; return COMMA;}
+[a-zA-Z_$][a-zA-Z0-9_$]*			{if(valorL==1){printf("ID(%s)\n", yytext);}contaColuna+=yyleng; return ID;}
 "\n"								{contaLinha++;contaColuna=1;}
 "\r"								{contaLinha++;contaColuna=1;}
 "\r\n"								{contaLinha++;contaColuna=1;}
@@ -112,6 +112,17 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 
 
 %%
+
+int main(int argc, char* argv[])
+{
+  if(argc>1){
+  	if(strcmp(argv[1],"-l") == 0)
+  		valorL= 1;
+  }
+  yylex();
+  return 0;
+}
+
 int yywrap()
 {
 return 1;
