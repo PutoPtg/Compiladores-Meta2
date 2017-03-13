@@ -8,13 +8,22 @@
 ************************************************************************************/
 
 %{
-    #include <stdio.h>
-    #include <string.h>
+	#include <stdio.h>
+	#include <string.h>
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include "y.tab.h"
+
 	int yylex(void);
-    void yyerror (const char *s);
+	int yyerror(char *s);
+
+	extern long long int contalinha;
+	extern long long int contacoluna;
+	extern char* yytext;
+
+	int valor1=0;
+	int valorNull=0;
+	int valorL=0;	
 %}
 
 %token STRLIT
@@ -62,13 +71,133 @@
 %token SEMI
 %token COMMA
 %token ID
+%token DOTLENGHT
 
 %%
 
-jac: expression                        {printf("%d\n", $1);}
+Program: CLASS ID OBRACE CBRACE
+			| CLASS ID OBRACE initDeclaration CBRACE;
 
-expression: ID                          {$$=$1;}
+initDeclaration: FieldDecl
+			| MethodDecl
+			| SEMI
+			| initDeclaration FieldDecl
+			| initDeclaration MethodDecl
+			| initDeclaration SEMI;
+
+FieldDecl: PUBLIC STATIC Type ID SEMI;
+			| PUBLIC STATIC Type ID CommaID SEMI;
+
+CommaID: COMMA ID
+			| CommaID COMMA ID;
+
+MethodDecl: PUBLIC STATIC MethodHeader MethodBody;
+
+MethodHeader: Type ID OCURV FormalParams CCURV
+			| Type ID OCURV CCURV
+			| VOID ID OCURV FormalParams CCURV
+			| VOID ID OCURV CCURV;
+
+MethodBody: OBRACE CBRACE
+			| OBRACE MethodParams CBRACE;
+
+MethodParams: VarDecl
+			| Statement
+			| MethodParams VarDecl
+			| MethodParams Statement;
+
+FormalParams: Type ID 
+			| Type ID CommaTypeID
+			| STRING OSQUARE CSQUARE ID;
+
+CommaTypeID: COMMA Type ID
+			| CommaTypeID COMMA Type ID;
+
+VarDecl: Type ID CommaID SEMI;
+
+Type: BOOL
+	| INT
+	| DOUBLE;
+
+Statement: OBRACE CBRACE
+		| OBRACE Statement CBRACE
+		| IF OCURV Expr CCURV Statement ELSE Statement /*gfgf*/
+		| WHILE OCURV Expr CCURV Statement
+		| DO Statement WHILE OCURV Expr CCURV SEMI
+		| PRINT OCURV Expr CCURV SEMI
+		| PRINT OCURV STRLIT CCURV SEMI
+		| SEMI
+		| Assignment SEMI
+		| MethodInvocation SEMI
+		| ParseArgs SEMI
+		| RETURN SEMI
+		| RETURN Expr SEMI;
+
+Assignment: ID ASSIGN Expr:
+
+MethodInvocation: ID OCURV CCURV
+				| ID OCURV Expr CCURV
+				| ID OCURV Expr CommaExpr CCURV;
+
+CommaExpr: COMMA Expr
+		| CommaExpr COMMA Expr;
+
+ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV;
+
+Expr: Assignment
+		| MethodInvocation
+		| ParseArgs
+		| Expr AND Expr
+		| Expr OR Expr
+		| Expr EQ Expr
+		| Expr GEQ Expr
+		| Expr GT Expr
+		| Expr LEQ Expr
+		| Expr LT Expr
+		| Expr NEQ Expr
+		| Expr PLUS Expr
+		| Expr MINUS Expr
+		| Expr STAR Expr
+		| Expr DIV Expr
+		| Expr MOD Expr
+		| PLUS Expr
+		| MINUS Expr
+		| NOT Expr
+		| ID
+		| ID DOTLENGTH
+		| OCURV Expr CCURV
+		| BOOLLIT
+		| DECLIT
+		| REALLIT;
+
+
 
 %%
+
+/* Função de erros */
+int yyerror(char *s){
+    return 0;
+}
+
+int main(int argc, char *argv[])
+{
+    if(argv[1] != NULL){
+        /*flag de compilação*/
+        if(strcmp(argv[1], "-1") == 0) {
+            valor1 = 1;
+            yylex();
+        }
+        else if(strcmp(argv[1], "-l") == 0) {
+            valorL=1;
+            yylex();
+        }
+    }
+    else if(argv[1] == NULL){
+            valorNull = 1;
+            yyparse();
+    }
+  
+    return 0;
+}
 
 

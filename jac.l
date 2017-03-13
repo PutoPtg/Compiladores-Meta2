@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.1
+*Versão 1.2
 ************************************************************************************/
 
 %X COMMENT
@@ -16,8 +16,11 @@
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include "y.tab.h"
+	void yyerror(char *s);
 
-	int valorL = 0;
+	extern int valorL;
+	extern int valor1;
+	extern int valorNull;
 	long long int contaLinha = 1;
 	long long int contaColuna = 1;
 	long long int commentPos[2];
@@ -113,21 +116,10 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 
 %%
 
-int main(int argc, char* argv[])
-{
-  if(argc>1){
-  	if(strcmp(argv[1],"-l") == 0)
-  		valorL= 1;
-  }
-  yylex();
-  return 0;
-}
 
 int yywrap()
 {
 return 1;
 }
 
-void yyerror (const char *s) {
-     printf ("%s: %s\n", s, yytext);
-}
+
