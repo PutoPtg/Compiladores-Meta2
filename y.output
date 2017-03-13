@@ -13,9 +13,9 @@ State 62 conflicts: 2 shift/reduce
 State 63 conflicts: 2 shift/reduce
 State 70 conflicts: 2 shift/reduce
 State 73 conflicts: 3 shift/reduce
-State 96 conflicts: 13 shift/reduce
-State 97 conflicts: 13 shift/reduce
-State 98 conflicts: 13 shift/reduce
+State 96 conflicts: 4 shift/reduce
+State 97 conflicts: 4 shift/reduce
+State 98 conflicts: 4 shift/reduce
 State 100 conflicts: 2 shift/reduce
 State 101 conflicts: 2 shift/reduce
 State 102 conflicts: 2 shift/reduce
@@ -31,19 +31,19 @@ State 111 conflicts: 2 shift/reduce
 State 112 conflicts: 2 shift/reduce
 State 124 conflicts: 2 shift/reduce
 State 126 conflicts: 2 shift/reduce
-State 130 conflicts: 13 shift/reduce
-State 131 conflicts: 13 shift/reduce
+State 130 conflicts: 4 shift/reduce
+State 131 conflicts: 4 shift/reduce
 State 132 conflicts: 13 shift/reduce
 State 133 conflicts: 13 shift/reduce
-State 134 conflicts: 13 shift/reduce
-State 135 conflicts: 13 shift/reduce
+State 134 conflicts: 4 shift/reduce
+State 135 conflicts: 4 shift/reduce
 State 136 conflicts: 13 shift/reduce
 State 137 conflicts: 13 shift/reduce
-State 138 conflicts: 13 shift/reduce
-State 139 conflicts: 13 shift/reduce
-State 140 conflicts: 13 shift/reduce
-State 141 conflicts: 13 shift/reduce
-State 142 conflicts: 13 shift/reduce
+State 138 conflicts: 4 shift/reduce
+State 139 conflicts: 4 shift/reduce
+State 140 conflicts: 4 shift/reduce
+State 141 conflicts: 4 shift/reduce
+State 142 conflicts: 4 shift/reduce
 State 145 conflicts: 2 shift/reduce
 State 159 conflicts: 2 shift/reduce
 
@@ -1356,33 +1356,18 @@ state 96
    69     | Expr . MOD Expr
    70     | PLUS Expr .
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT    shift, and go to state 102
+    GT    shift, and go to state 103
+    LEQ   shift, and go to state 106
+    GEQ   shift, and go to state 107
+    STAR  shift, and go to state 110
+    DIV   shift, and go to state 111
+    MOD   shift, and go to state 112
 
-    AND       [reduce using rule 70 (Expr)]
-    OR        [reduce using rule 70 (Expr)]
     LT        [reduce using rule 70 (Expr)]
     GT        [reduce using rule 70 (Expr)]
-    EQ        [reduce using rule 70 (Expr)]
-    NEQ       [reduce using rule 70 (Expr)]
     LEQ       [reduce using rule 70 (Expr)]
     GEQ       [reduce using rule 70 (Expr)]
-    PLUS      [reduce using rule 70 (Expr)]
-    MINUS     [reduce using rule 70 (Expr)]
-    STAR      [reduce using rule 70 (Expr)]
-    DIV       [reduce using rule 70 (Expr)]
-    MOD       [reduce using rule 70 (Expr)]
     $default  reduce using rule 70 (Expr)
 
 
@@ -1403,33 +1388,18 @@ state 97
    69     | Expr . MOD Expr
    71     | MINUS Expr .
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT    shift, and go to state 102
+    GT    shift, and go to state 103
+    LEQ   shift, and go to state 106
+    GEQ   shift, and go to state 107
+    STAR  shift, and go to state 110
+    DIV   shift, and go to state 111
+    MOD   shift, and go to state 112
 
-    AND       [reduce using rule 71 (Expr)]
-    OR        [reduce using rule 71 (Expr)]
     LT        [reduce using rule 71 (Expr)]
     GT        [reduce using rule 71 (Expr)]
-    EQ        [reduce using rule 71 (Expr)]
-    NEQ       [reduce using rule 71 (Expr)]
     LEQ       [reduce using rule 71 (Expr)]
     GEQ       [reduce using rule 71 (Expr)]
-    PLUS      [reduce using rule 71 (Expr)]
-    MINUS     [reduce using rule 71 (Expr)]
-    STAR      [reduce using rule 71 (Expr)]
-    DIV       [reduce using rule 71 (Expr)]
-    MOD       [reduce using rule 71 (Expr)]
     $default  reduce using rule 71 (Expr)
 
 
@@ -1450,33 +1420,15 @@ state 98
    69     | Expr . MOD Expr
    72     | NOT Expr .
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT   shift, and go to state 102
+    GT   shift, and go to state 103
+    LEQ  shift, and go to state 106
+    GEQ  shift, and go to state 107
 
-    AND       [reduce using rule 72 (Expr)]
-    OR        [reduce using rule 72 (Expr)]
     LT        [reduce using rule 72 (Expr)]
     GT        [reduce using rule 72 (Expr)]
-    EQ        [reduce using rule 72 (Expr)]
-    NEQ       [reduce using rule 72 (Expr)]
     LEQ       [reduce using rule 72 (Expr)]
     GEQ       [reduce using rule 72 (Expr)]
-    PLUS      [reduce using rule 72 (Expr)]
-    MINUS     [reduce using rule 72 (Expr)]
-    STAR      [reduce using rule 72 (Expr)]
-    DIV       [reduce using rule 72 (Expr)]
-    MOD       [reduce using rule 72 (Expr)]
     $default  reduce using rule 72 (Expr)
 
 
@@ -2047,8 +1999,6 @@ state 130
    68     | Expr . DIV Expr
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
     LT     shift, and go to state 102
     GT     shift, and go to state 103
     EQ     shift, and go to state 104
@@ -2061,19 +2011,10 @@ state 130
     DIV    shift, and go to state 111
     MOD    shift, and go to state 112
 
-    AND       [reduce using rule 57 (Expr)]
-    OR        [reduce using rule 57 (Expr)]
     LT        [reduce using rule 57 (Expr)]
     GT        [reduce using rule 57 (Expr)]
-    EQ        [reduce using rule 57 (Expr)]
-    NEQ       [reduce using rule 57 (Expr)]
     LEQ       [reduce using rule 57 (Expr)]
     GEQ       [reduce using rule 57 (Expr)]
-    PLUS      [reduce using rule 57 (Expr)]
-    MINUS     [reduce using rule 57 (Expr)]
-    STAR      [reduce using rule 57 (Expr)]
-    DIV       [reduce using rule 57 (Expr)]
-    MOD       [reduce using rule 57 (Expr)]
     $default  reduce using rule 57 (Expr)
 
 
@@ -2095,7 +2036,6 @@ state 131
    69     | Expr . MOD Expr
 
     AND    shift, and go to state 100
-    OR     shift, and go to state 101
     LT     shift, and go to state 102
     GT     shift, and go to state 103
     EQ     shift, and go to state 104
@@ -2108,19 +2048,10 @@ state 131
     DIV    shift, and go to state 111
     MOD    shift, and go to state 112
 
-    AND       [reduce using rule 58 (Expr)]
-    OR        [reduce using rule 58 (Expr)]
     LT        [reduce using rule 58 (Expr)]
     GT        [reduce using rule 58 (Expr)]
-    EQ        [reduce using rule 58 (Expr)]
-    NEQ       [reduce using rule 58 (Expr)]
     LEQ       [reduce using rule 58 (Expr)]
     GEQ       [reduce using rule 58 (Expr)]
-    PLUS      [reduce using rule 58 (Expr)]
-    MINUS     [reduce using rule 58 (Expr)]
-    STAR      [reduce using rule 58 (Expr)]
-    DIV       [reduce using rule 58 (Expr)]
-    MOD       [reduce using rule 58 (Expr)]
     $default  reduce using rule 58 (Expr)
 
 
@@ -2235,12 +2166,8 @@ state 134
    68     | Expr . DIV Expr
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
     LT     shift, and go to state 102
     GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
     LEQ    shift, and go to state 106
     GEQ    shift, and go to state 107
     PLUS   shift, and go to state 108
@@ -2249,19 +2176,10 @@ state 134
     DIV    shift, and go to state 111
     MOD    shift, and go to state 112
 
-    AND       [reduce using rule 59 (Expr)]
-    OR        [reduce using rule 59 (Expr)]
     LT        [reduce using rule 59 (Expr)]
     GT        [reduce using rule 59 (Expr)]
-    EQ        [reduce using rule 59 (Expr)]
-    NEQ       [reduce using rule 59 (Expr)]
     LEQ       [reduce using rule 59 (Expr)]
     GEQ       [reduce using rule 59 (Expr)]
-    PLUS      [reduce using rule 59 (Expr)]
-    MINUS     [reduce using rule 59 (Expr)]
-    STAR      [reduce using rule 59 (Expr)]
-    DIV       [reduce using rule 59 (Expr)]
-    MOD       [reduce using rule 59 (Expr)]
     $default  reduce using rule 59 (Expr)
 
 
@@ -2282,12 +2200,8 @@ state 135
    68     | Expr . DIV Expr
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
     LT     shift, and go to state 102
     GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
     LEQ    shift, and go to state 106
     GEQ    shift, and go to state 107
     PLUS   shift, and go to state 108
@@ -2296,19 +2210,10 @@ state 135
     DIV    shift, and go to state 111
     MOD    shift, and go to state 112
 
-    AND       [reduce using rule 64 (Expr)]
-    OR        [reduce using rule 64 (Expr)]
     LT        [reduce using rule 64 (Expr)]
     GT        [reduce using rule 64 (Expr)]
-    EQ        [reduce using rule 64 (Expr)]
-    NEQ       [reduce using rule 64 (Expr)]
     LEQ       [reduce using rule 64 (Expr)]
     GEQ       [reduce using rule 64 (Expr)]
-    PLUS      [reduce using rule 64 (Expr)]
-    MINUS     [reduce using rule 64 (Expr)]
-    STAR      [reduce using rule 64 (Expr)]
-    DIV       [reduce using rule 64 (Expr)]
-    MOD       [reduce using rule 64 (Expr)]
     $default  reduce using rule 64 (Expr)
 
 
@@ -2423,33 +2328,18 @@ state 138
    68     | Expr . DIV Expr
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT    shift, and go to state 102
+    GT    shift, and go to state 103
+    LEQ   shift, and go to state 106
+    GEQ   shift, and go to state 107
+    STAR  shift, and go to state 110
+    DIV   shift, and go to state 111
+    MOD   shift, and go to state 112
 
-    AND       [reduce using rule 65 (Expr)]
-    OR        [reduce using rule 65 (Expr)]
     LT        [reduce using rule 65 (Expr)]
     GT        [reduce using rule 65 (Expr)]
-    EQ        [reduce using rule 65 (Expr)]
-    NEQ       [reduce using rule 65 (Expr)]
     LEQ       [reduce using rule 65 (Expr)]
     GEQ       [reduce using rule 65 (Expr)]
-    PLUS      [reduce using rule 65 (Expr)]
-    MINUS     [reduce using rule 65 (Expr)]
-    STAR      [reduce using rule 65 (Expr)]
-    DIV       [reduce using rule 65 (Expr)]
-    MOD       [reduce using rule 65 (Expr)]
     $default  reduce using rule 65 (Expr)
 
 
@@ -2470,33 +2360,18 @@ state 139
    68     | Expr . DIV Expr
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT    shift, and go to state 102
+    GT    shift, and go to state 103
+    LEQ   shift, and go to state 106
+    GEQ   shift, and go to state 107
+    STAR  shift, and go to state 110
+    DIV   shift, and go to state 111
+    MOD   shift, and go to state 112
 
-    AND       [reduce using rule 66 (Expr)]
-    OR        [reduce using rule 66 (Expr)]
     LT        [reduce using rule 66 (Expr)]
     GT        [reduce using rule 66 (Expr)]
-    EQ        [reduce using rule 66 (Expr)]
-    NEQ       [reduce using rule 66 (Expr)]
     LEQ       [reduce using rule 66 (Expr)]
     GEQ       [reduce using rule 66 (Expr)]
-    PLUS      [reduce using rule 66 (Expr)]
-    MINUS     [reduce using rule 66 (Expr)]
-    STAR      [reduce using rule 66 (Expr)]
-    DIV       [reduce using rule 66 (Expr)]
-    MOD       [reduce using rule 66 (Expr)]
     $default  reduce using rule 66 (Expr)
 
 
@@ -2517,33 +2392,15 @@ state 140
    68     | Expr . DIV Expr
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT   shift, and go to state 102
+    GT   shift, and go to state 103
+    LEQ  shift, and go to state 106
+    GEQ  shift, and go to state 107
 
-    AND       [reduce using rule 67 (Expr)]
-    OR        [reduce using rule 67 (Expr)]
     LT        [reduce using rule 67 (Expr)]
     GT        [reduce using rule 67 (Expr)]
-    EQ        [reduce using rule 67 (Expr)]
-    NEQ       [reduce using rule 67 (Expr)]
     LEQ       [reduce using rule 67 (Expr)]
     GEQ       [reduce using rule 67 (Expr)]
-    PLUS      [reduce using rule 67 (Expr)]
-    MINUS     [reduce using rule 67 (Expr)]
-    STAR      [reduce using rule 67 (Expr)]
-    DIV       [reduce using rule 67 (Expr)]
-    MOD       [reduce using rule 67 (Expr)]
     $default  reduce using rule 67 (Expr)
 
 
@@ -2564,33 +2421,15 @@ state 141
    68     | Expr DIV Expr .
    69     | Expr . MOD Expr
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT   shift, and go to state 102
+    GT   shift, and go to state 103
+    LEQ  shift, and go to state 106
+    GEQ  shift, and go to state 107
 
-    AND       [reduce using rule 68 (Expr)]
-    OR        [reduce using rule 68 (Expr)]
     LT        [reduce using rule 68 (Expr)]
     GT        [reduce using rule 68 (Expr)]
-    EQ        [reduce using rule 68 (Expr)]
-    NEQ       [reduce using rule 68 (Expr)]
     LEQ       [reduce using rule 68 (Expr)]
     GEQ       [reduce using rule 68 (Expr)]
-    PLUS      [reduce using rule 68 (Expr)]
-    MINUS     [reduce using rule 68 (Expr)]
-    STAR      [reduce using rule 68 (Expr)]
-    DIV       [reduce using rule 68 (Expr)]
-    MOD       [reduce using rule 68 (Expr)]
     $default  reduce using rule 68 (Expr)
 
 
@@ -2611,33 +2450,15 @@ state 142
    69     | Expr . MOD Expr
    69     | Expr MOD Expr .
 
-    AND    shift, and go to state 100
-    OR     shift, and go to state 101
-    LT     shift, and go to state 102
-    GT     shift, and go to state 103
-    EQ     shift, and go to state 104
-    NEQ    shift, and go to state 105
-    LEQ    shift, and go to state 106
-    GEQ    shift, and go to state 107
-    PLUS   shift, and go to state 108
-    MINUS  shift, and go to state 109
-    STAR   shift, and go to state 110
-    DIV    shift, and go to state 111
-    MOD    shift, and go to state 112
+    LT   shift, and go to state 102
+    GT   shift, and go to state 103
+    LEQ  shift, and go to state 106
+    GEQ  shift, and go to state 107
 
-    AND       [reduce using rule 69 (Expr)]
-    OR        [reduce using rule 69 (Expr)]
     LT        [reduce using rule 69 (Expr)]
     GT        [reduce using rule 69 (Expr)]
-    EQ        [reduce using rule 69 (Expr)]
-    NEQ       [reduce using rule 69 (Expr)]
     LEQ       [reduce using rule 69 (Expr)]
     GEQ       [reduce using rule 69 (Expr)]
-    PLUS      [reduce using rule 69 (Expr)]
-    MINUS     [reduce using rule 69 (Expr)]
-    STAR      [reduce using rule 69 (Expr)]
-    DIV       [reduce using rule 69 (Expr)]
-    MOD       [reduce using rule 69 (Expr)]
     $default  reduce using rule 69 (Expr)
 
 
