@@ -84,7 +84,8 @@
      SEMI = 300,
      COMMA = 301,
      ID = 302,
-     DOTLENGHT = 303
+     DOTLENGHT = 303,
+     LOWER_THAN_ELSE = 304
    };
 #endif
 /* Tokens.  */
@@ -134,6 +135,7 @@
 #define COMMA 301
 #define ID 302
 #define DOTLENGHT 303
+#define LOWER_THAN_ELSE 304
 
 
 

@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.04
+*Versão 0.05
 ************************************************************************************/
 
 %{
@@ -73,6 +73,9 @@
 %token ID
 %token DOTLENGHT
 
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+
 %left COMMA
 %right ASSIGN
 %left OR
@@ -132,7 +135,8 @@ Type: BOOL
 
 Statement: OBRACE CBRACE
 		| OBRACE Statement CBRACE
-		| IF OCURV Expr CCURV Statement ELSE Statement /*gfgf*/
+		| IF OCURV Expr CCURV Statement %prec LOWER_THAN_ELSE
+		| IF OCURV Expr CCURV Statement ELSE Statement 
 		| WHILE OCURV Expr CCURV Statement
 		| DO Statement WHILE OCURV Expr CCURV SEMI
 		| PRINT OCURV Expr CCURV SEMI
