@@ -1,3 +1,12 @@
+/***********************************************************************************
+*Ficheiro "tree.h"
+*Anexo ao Analisador Sintático da linguagem Ja - Sub-conjunto de Java
+*Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
+*Manuel Madeira Amado - 2006131282
+*Xavier Silva - 2013153577
+*Versão 0.02
+************************************************************************************/
+
 #ifndef TREE_H_INCLUDED
 #define TREE_H_INCLUDED
 

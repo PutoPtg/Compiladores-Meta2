@@ -1,10 +1,10 @@
-/***********************************************************************************
-*Ficheiro "jac.y"
-*Analisador Sintático da linguagem Ja - Sub-conjunto de Java
-*Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
-*Manuel Madeira Amado - 2006131282
-*Xavier Silva - 2013153577
-*Versão 0.07
+/************************************************************************************
+* Ficheiro "jac.y"																	*
+* Analisador Sintático da linguagem Ja - Sub-conjunto de Java						*
+* Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
+* Manuel Madeira Amado - 2006131282													*
+* Xavier Silva - 2013153577															*
+* Versão 0.08																		*
 ************************************************************************************/
 
 %{
@@ -38,7 +38,7 @@
     struct node* no;
 };
 
-%token <val> STRLIT REALLIT DECLIT BOOLLIT ID 
+%token <val> STRLIT REALLIT DECLIT BOOLLIT ID
 %token BOOL
 %token INT
 %token DOUBLE
@@ -101,84 +101,84 @@
 /*********************************************************************
 * Program → CLASS ID OBRACE { FieldDecl | MethodDecl | SEMI } CBRACE *
 **********************************************************************/
-Program: CLASS ID OBRACE InitDeclaration CBRACE {;}	
+Program: CLASS ID OBRACE InitDeclaration CBRACE {if (contaErros == 0){$$ = createNode();}}
 
-InitDeclaration: /*empty*/						{;}
-			| InitDeclaration FieldDecl			{;}
-			| InitDeclaration MethodDecl		{;}
-			| InitDeclaration SEMI				{;}
+InitDeclaration: /*empty*/						{if (contaErros == 0){;}}
+			| InitDeclaration FieldDecl			{if (contaErros == 0){;}}
+			| InitDeclaration MethodDecl		{if (contaErros == 0){;}}
+			| InitDeclaration SEMI				{if (contaErros == 0){;}}
 			;
 
 
 /*********************************************************************
 * FieldDecl → PUBLIC STATIC Type ID { COMMA ID } SEMI				 *
 *********************************************************************/
-FieldDecl: PUBLIC STATIC Type ID SEMI				{;}
-			| PUBLIC STATIC Type ID CommaID SEMI	{;}
-			| error SEMI							{;}
+FieldDecl: PUBLIC STATIC Type ID SEMI				{if (contaErros == 0){;}}
+			| PUBLIC STATIC Type ID CommaID SEMI	{if (contaErros == 0){;}}
+			| error SEMI							{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
 			;
 
-CommaID: COMMA ID 						{;}
-			| CommaID COMMA ID 			{;}
+CommaID: COMMA ID 						{if (contaErros == 0){;}}
+			| CommaID COMMA ID 			{if (contaErros == 0){;}}
 			;
 
 
 /*********************************************************************
 * MethodDecl → PUBLIC STATIC MethodHeader MethodBody				 *
 *********************************************************************/
-MethodDecl: PUBLIC STATIC MethodHeader MethodBody		{;}
+MethodDecl: PUBLIC STATIC MethodHeader MethodBody		{if (contaErros == 0){;}}
 
 
 /*********************************************************************
 * MethodHeader → ( Type | VOID ) ID OCURV [ FormalParams ] CCURV	 *
 *********************************************************************/
-MethodHeader: Type ID OCURV FormalParams CCURV		{;}
-			| Type ID OCURV CCURV					{;}
-			| VOID ID OCURV FormalParams CCURV		{;}
-			| VOID ID OCURV CCURV					{;}
+MethodHeader: Type ID OCURV FormalParams CCURV		{if (contaErros == 0){;}}
+			| Type ID OCURV CCURV					{if (contaErros == 0){;}}
+			| VOID ID OCURV FormalParams CCURV		{if (contaErros == 0){;}}
+			| VOID ID OCURV CCURV					{if (contaErros == 0){;}}
 			;
 
 
 /*********************************************************************
 * MethodBody → OBRACE { VarDecl | Statement } CBRACE				 *
 *********************************************************************/
-MethodBody: OBRACE CBRACE							{;}
-			| OBRACE MethodParams CBRACE			{;}
+MethodBody: OBRACE CBRACE							{if (contaErros == 0){;}}
+			| OBRACE MethodParams CBRACE			{if (contaErros == 0){;}}
 			;
 
-MethodParams: VarDecl								{;}
-			| Statement								{;}
-			| MethodParams VarDecl					{;}
-			| MethodParams Statement				{;}
-			;		
+MethodParams: VarDecl								{if (contaErros == 0){;}}
+			| Statement								{if (contaErros == 0){;}}
+			| MethodParams VarDecl					{if (contaErros == 0){;}}
+			| MethodParams Statement				{if (contaErros == 0){;}}
+			;
 
 
 /*********************************************************************
 * FormalParams → Type ID { COMMA Type ID }							 *
 * FormalParams → STRING OSQUARE CSQUARE ID							 *
 *********************************************************************/
-FormalParams: Type ID 								{;}
-			| Type ID CommaTypeID					{;}
-			| STRING OSQUARE CSQUARE ID 			{;}
+FormalParams: Type ID 								{if (contaErros == 0){;}}
+			| Type ID CommaTypeID					{if (contaErros == 0){;}}
+			| STRING OSQUARE CSQUARE ID 			{if (contaErros == 0){;}}
 			;
 
-CommaTypeID: COMMA Type ID 							{;}
-			| CommaTypeID COMMA Type ID 			{;}
+CommaTypeID: COMMA Type ID 							{if (contaErros == 0){;}}
+			| CommaTypeID COMMA Type ID 			{if (contaErros == 0){;}}
 			;
 
 
 /*********************************************************************
 * VarDecl → Type ID { COMMA ID } SEMI 								 *
 *********************************************************************/
-VarDecl: Type ID CommaID SEMI						{;}
+VarDecl: Type ID CommaID SEMI						{if (contaErros == 0){;}}
 
 
 /*********************************************************************
 * Type → BOOL | INT | DOUBLE										 *
 *********************************************************************/
-Type: BOOL 											{;}
-	| INT 											{;}
-	| DOUBLE 										{;}
+Type: BOOL 											{if (contaErros == 0){;}}
+	| INT 											{if (contaErros == 0){;}}
+	| DOUBLE 										{if (contaErros == 0){;}}
 	;
 
 
@@ -191,49 +191,49 @@ Type: BOOL 											{;}
 * Statement → [ ( Assignment | MethodInvocation | ParseArgs ) ] SEMI *
 * Statement → RETURN [ Expr ] SEMI									 *
 *********************************************************************/
-Statement: OBRACE CBRACE											{;}
-		| OBRACE Statement CBRACE									{;}
-		| IF OCURV Expr CCURV Statement %prec LOWER_THAN_ELSE 		{;}
-		| IF OCURV Expr CCURV Statement ELSE Statement 				{;}
-		| WHILE OCURV Expr CCURV Statement 							{;}
-		| DO Statement WHILE OCURV Expr CCURV SEMI 					{;}
-		| PRINT OCURV Expr CCURV SEMI 								{;}
-		| PRINT OCURV STRLIT CCURV SEMI 							{;}
-		| SEMI														{;}
-		| Assignment SEMI											{;}
-		| MethodInvocation SEMI										{;}
-		| ParseArgs SEMI											{;}
-		| RETURN SEMI												{;}
-		| RETURN Expr SEMI											{;}
-		| error SEMI												{;}
+Statement: OBRACE CBRACE											{if (contaErros == 0){;}}
+		| OBRACE Statement CBRACE									{if (contaErros == 0){;}}
+		| IF OCURV Expr CCURV Statement %prec LOWER_THAN_ELSE 		{if (contaErros == 0){;}}
+		| IF OCURV Expr CCURV Statement ELSE Statement 				{if (contaErros == 0){;}}
+		| WHILE OCURV Expr CCURV Statement 							{if (contaErros == 0){;}}
+		| DO Statement WHILE OCURV Expr CCURV SEMI 					{if (contaErros == 0){;}}
+		| PRINT OCURV Expr CCURV SEMI 								{if (contaErros == 0){;}}
+		| PRINT OCURV STRLIT CCURV SEMI 							{if (contaErros == 0){;}}
+		| SEMI														{if (contaErros == 0){;}}
+		| Assignment SEMI											{if (contaErros == 0){;}}
+		| MethodInvocation SEMI										{if (contaErros == 0){;}}
+		| ParseArgs SEMI											{if (contaErros == 0){;}}
+		| RETURN SEMI												{if (contaErros == 0){;}}
+		| RETURN Expr SEMI											{if (contaErros == 0){;}}
+		| error SEMI												{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
 		;
 
 
 /*********************************************************************
 * Assignment → ID ASSIGN Expr										 *
 *********************************************************************/
-Assignment: ID ASSIGN Expr 									{;}
+Assignment: ID ASSIGN Expr 									{if (contaErros == 0){;}}
 
 
 /*********************************************************************
 * MethodInvocation → ID OCURV [ Expr { COMMA Expr } ] CCURV 		 *
 *********************************************************************/
-MethodInvocation: ID OCURV CCURV							{;}
-				| ID OCURV Expr CCURV						{;}
-				| ID OCURV Expr CommaExpr CCURV				{;}
-				| ID OCURV error CCURV						{;}
+MethodInvocation: ID OCURV CCURV							{if (contaErros == 0){;}}
+				| ID OCURV Expr CCURV						{if (contaErros == 0){;}}
+				| ID OCURV Expr CommaExpr CCURV				{if (contaErros == 0){;}}
+				| ID OCURV error CCURV						{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
 				;
 
-CommaExpr: COMMA Expr 									{;}
-		| CommaExpr COMMA Expr 							{;}
+CommaExpr: COMMA Expr 									{if (contaErros == 0){;}}
+		| CommaExpr COMMA Expr 							{if (contaErros == 0){;}}
 		;
 
 
 /*********************************************************************
 * ParseArgs → PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			 *
 *********************************************************************/
-ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{;}
-		| PARSEINT OCURV error CCURV							{;}
+ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{if (contaErros == 0){;}}
+		| PARSEINT OCURV error CCURV							{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
 		;
 
 
@@ -247,32 +247,32 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{;}
 * Expr → OCURV Expr CCURV											 *
 * Expr → BOOLLIT | DECLIT | REALLIT									 *
 *********************************************************************/
-Expr: Assignment								{;}
-		| MethodInvocation						{;}
-		| ParseArgs								{;}
-		| Expr AND Expr 						{;}
-		| Expr OR Expr 							{;}
-		| Expr EQ Expr 							{;}
-		| Expr GEQ Expr 						{;}
-		| Expr GT Expr 							{;}
-		| Expr LEQ Expr 						{;}
-		| Expr LT Expr 							{;}
-		| Expr NEQ Expr 						{;}
-		| Expr PLUS Expr 						{;}
-		| Expr MINUS Expr 						{;}
-		| Expr STAR Expr 						{;}
-		| Expr DIV Expr 						{;}
-		| Expr MOD Expr 						{;}
-		| PLUS Expr  							{;}
-		| MINUS Expr  							{;}
-		| NOT Expr  							{;}
-		| ID 									{;}
-		| ID DOTLENGTH 							{;}
-		| OCURV Expr CCURV 						{;}
-		| BOOLLIT 								{;}
-		| DECLIT 								{;}
-		| REALLIT								{;}
-		| OCURV error CCURV						{;}
+Expr: Assignment								{if (contaErros == 0){;}}
+		| MethodInvocation						{if (contaErros == 0){;}}
+		| ParseArgs								{if (contaErros == 0){;}}
+		| Expr AND Expr 						{if (contaErros == 0){;}}
+		| Expr OR Expr 							{if (contaErros == 0){;}}
+		| Expr EQ Expr 							{if (contaErros == 0){;}}
+		| Expr GEQ Expr 						{if (contaErros == 0){;}}
+		| Expr GT Expr 							{if (contaErros == 0){;}}
+		| Expr LEQ Expr 						{if (contaErros == 0){;}}
+		| Expr LT Expr 							{if (contaErros == 0){;}}
+		| Expr NEQ Expr 						{if (contaErros == 0){;}}
+		| Expr PLUS Expr 						{if (contaErros == 0){;}}
+		| Expr MINUS Expr 						{if (contaErros == 0){;}}
+		| Expr STAR Expr 						{if (contaErros == 0){;}}
+		| Expr DIV Expr 						{if (contaErros == 0){;}}
+		| Expr MOD Expr 						{if (contaErros == 0){;}}
+		| PLUS Expr  							{if (contaErros == 0){;}}
+		| MINUS Expr  							{if (contaErros == 0){;}}
+		| NOT Expr  							{if (contaErros == 0){;}}
+		| ID 									{if (contaErros == 0){;}}
+		| ID DOTLENGTH 							{if (contaErros == 0){;}}
+		| OCURV Expr CCURV 						{if (contaErros == 0){;}}
+		| BOOLLIT 								{if (contaErros == 0){;}}
+		| DECLIT 								{if (contaErros == 0){;}}
+		| REALLIT								{if (contaErros == 0){;}}
+		| OCURV error CCURV						{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
 		;
 
 %%
@@ -307,6 +307,9 @@ int main(int argc, char *argv[])
     }
 
     //limpa memória
+    if (contaErros == 0){
+    	clearTree(root);
+    }
 
     return 0;
 }

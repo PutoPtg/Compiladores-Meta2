@@ -1,9 +1,23 @@
+/***********************************************************************************
+*Ficheiro "tree.c"
+*Anexo ao Analisador Sintático da linguagem Ja - Sub-conjunto de Java
+*Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
+*Manuel Madeira Amado - 2006131282
+*Xavier Silva - 2013153577
+*Versão 0.02
+************************************************************************************/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "tree.h"
 
-
+/************************************************************************************
+* DESCRIÇÃO: Cria um nó para a Árvore												*
+* RECEBE: estrutura node_type, Ponteiro para o nome e ponteiro para a 				*
+* variável a armazenar																*
+* DEVOLVE: ponteiro para o nó criado												*
+************************************************************************************/
 node* createNode(node_type nodeType, char* nodeTypeName, char* var)
 {
     node* result = (node*)malloc(sizeof(node));
@@ -19,6 +33,11 @@ node* createNode(node_type nodeType, char* nodeTypeName, char* var)
     return result;
 }
 
+/************************************************************************************
+* DESCRIÇÃO: Adiciona um nó filho a outro nó										*
+* RECEBE: ponteiro para o nó pai e ponteiro para o nó filho							*
+* DEVOLVE: nada																		*
+************************************************************************************/
 void addChild(node* parent, node* child)
 {
     if(parent==NULL || child==NULL)
@@ -39,6 +58,11 @@ void addChild(node* parent, node* child)
     }
 }
 
+/************************************************************************************
+* DESCRIÇÃO: Adiciona um ponteiro à esquerda ou direita entre dois nós				*
+* RECEBE: ponteiro para o nó à esquerda e ponteiro para o nó à direita				*
+* DEVOLVE: nada																		*
+************************************************************************************/
 void addBrother(node* left, node* right)
 {
     if(left==NULL || right==NULL)
@@ -58,12 +82,18 @@ void addBrother(node* left, node* right)
     }
 }
 
+/************************************************************************************
+* DESCRIÇÃO: Imprime a árvore														*
+* RECEBE: TODO																		*
+* DEVOLVE: nada																		*
+************************************************************************************/
 void printTree(node* current, int level)
 {
-    /*if(current==NULL)
+    if(current==NULL)
     {
         return;
     }
+    /*
     int k,i,j,conta_ponteiro;
     if(current->nodeType == DECL_node){
         for(i=1; i<current->numChildren; i++)
@@ -97,9 +127,9 @@ void printTree(node* current, int level)
                 }
                 printTree(current->children[i], level+1);
             }
-            
+
         }
-    
+
     }else if(strcmp(current->nodeTypeName,"FuncBody")==0){
         for(j=0; j<level; j++)
         {
@@ -202,7 +232,7 @@ void printTree(node* current, int level)
                 }
                 printf("Null\n");
             }
-            
+
 
         }
     else if(strcmp(current->var,"for")==0){
@@ -266,6 +296,12 @@ void printTree(node* current, int level)
     }*/
 }
 
+
+/************************************************************************************
+* DESCRIÇÃO: Liberta a Memória ocupada pela árvore									*
+* RECEBE: ponteiro para a raíz														*
+* DEVOLVE: nada																		*
+************************************************************************************/
 void clearTree(node* current)
 {
     if(current == NULL)
