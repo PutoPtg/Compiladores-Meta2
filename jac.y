@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.06
+*Versão 0.07
 ************************************************************************************/
 
 %{
@@ -14,31 +14,40 @@
 	#include <stdio.h>
 	#include "y.tab.h"
 
+	#include "tree.h"
+	#define VAR (char*)calloc(1,sizeof(char))
+
 	int yylex(void);
 	int yyerror(char *s);
 
-	extern long long int contalinha;
-	extern long long int contacoluna;
+	extern long long int contaLinha;
+	extern long long int contaColuna;
 	extern char* yytext;
 
 	int valor1=0;
 	int valorNull=0;
 	int valorL=0;
+	int contaErros = 0;
+
+	node* root;
+	node* aux;
 %}
 
-%token STRLIT
-%token REALLIT
-%token DECLIT
-%token RESERVED
+%union{
+    char* val;
+    struct node* no;
+};
+
+%token <val> STRLIT REALLIT DECLIT BOOLLIT ID 
 %token BOOL
-%token BOOLLIT
+%token INT
+%token DOUBLE
+%token RESERVED
 %token CLASS
 %token DO
 %token DOTLENGTH
-%token DOUBLE
 %token ELSE
 %token IF
-%token INT
 %token PARSEINT
 %token PRINT
 %token PUBLIC
@@ -70,7 +79,6 @@
 %token ASSIGN
 %token SEMI
 %token COMMA
-%token ID
 %token DOTLENGHT
 
 %nonassoc LOWER_THAN_ELSE
@@ -85,8 +93,7 @@
 %left PLUS MINUS
 %left STAR DIV MOD
 %right NOT
-%right OBRACE OCURV OSQUARE
-%left CBRACE CCURV CSQUARE
+%left CBRACE CCURV CSQUARE OBRACE OCURV OSQUARE
 
 
 %%
@@ -108,6 +115,7 @@ InitDeclaration: /*empty*/						{;}
 *********************************************************************/
 FieldDecl: PUBLIC STATIC Type ID SEMI				{;}
 			| PUBLIC STATIC Type ID CommaID SEMI	{;}
+			| error SEMI							{;}
 			;
 
 CommaID: COMMA ID 						{;}
@@ -197,6 +205,7 @@ Statement: OBRACE CBRACE											{;}
 		| ParseArgs SEMI											{;}
 		| RETURN SEMI												{;}
 		| RETURN Expr SEMI											{;}
+		| error SEMI												{;}
 		;
 
 
@@ -212,6 +221,7 @@ Assignment: ID ASSIGN Expr 									{;}
 MethodInvocation: ID OCURV CCURV							{;}
 				| ID OCURV Expr CCURV						{;}
 				| ID OCURV Expr CommaExpr CCURV				{;}
+				| ID OCURV error CCURV						{;}
 				;
 
 CommaExpr: COMMA Expr 									{;}
@@ -223,6 +233,8 @@ CommaExpr: COMMA Expr 									{;}
 * ParseArgs → PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			 *
 *********************************************************************/
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{;}
+		| PARSEINT OCURV error CCURV							{;}
+		;
 
 
 /*********************************************************************
@@ -260,12 +272,15 @@ Expr: Assignment								{;}
 		| BOOLLIT 								{;}
 		| DECLIT 								{;}
 		| REALLIT								{;}
+		| OCURV error CCURV						{;}
 		;
 
 %%
 
 /* Função de erros */
 int yyerror(char *s){
+    printf("Line %lld, col %lld: %s: %s\n", contaLinha, contaColuna, s, yytext);
+    contaErros++;
     return 0;
 }
 
@@ -286,6 +301,12 @@ int main(int argc, char *argv[])
             valorNull = 1;
             yyparse();
     }
+
+    if(contaErros == 0){
+    	//Imprime árvore
+    }
+
+    //limpa memória
 
     return 0;
 }

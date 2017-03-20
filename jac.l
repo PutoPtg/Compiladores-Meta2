@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.2
+*Versão 1.3
 ************************************************************************************/
 
 %X COMMENT
@@ -16,6 +16,7 @@
 	#include <stdlib.h>
 	#include <stdio.h>
 	#include "y.tab.h"
+	#include "tree.h"
 	void yyerror(char *s);
 
 	extern int valorL;
@@ -52,7 +53,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 <STR>{seqEscape}					{contaColuna+=yyleng;}
 <STR>\\.|\\							{printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext);contaColuna+=yyleng; goodSTR=0;}
 <STR><<EOF>>						{contaColuna+=yyleng;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[0]);BEGIN 0;}
-<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1)printf("STRLIT(%s)\n", auxStr);BEGIN 0; return STRLIT;}
+<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char));strncpy(yylval.val,yytext,yyleng); BEGIN 0; return STRLIT;}}
 <STR>\n|\r|\r\n 					{contaLinha++; contaColuna=1;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]);BEGIN 0;}
 <STR>.								{contaColuna+=yyleng;}
 
