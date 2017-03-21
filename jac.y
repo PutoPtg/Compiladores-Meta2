@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.08																		*
+* Versão 0.09																		*
 ************************************************************************************/
 
 %{
@@ -95,13 +95,23 @@
 %right NOT
 %left CBRACE CCURV CSQUARE OBRACE OCURV OSQUARE
 
+%type <no> Program InitDeclaration FieldDecl CommaID MethodDecl MethodHeader MethodBody MethodParams FormalParams CommaTypeID VarDecl Type Statement Assignment MethodInvocation CommaExpr ParseArgs Expr
 
 %%
 
 /*********************************************************************
 * Program → CLASS ID OBRACE { FieldDecl | MethodDecl | SEMI } CBRACE *
 **********************************************************************/
-Program: CLASS ID OBRACE InitDeclaration CBRACE {if (contaErros == 0){$$ = createNode();}}
+Program: CLASS ID OBRACE InitDeclaration CBRACE {
+													if (contaErros == 0){
+														$$ = createNode(OTHER_node ,"Program", VAR);
+														aux = createNode(OTHER_node,"InitDeclaration",VAR);
+														addChild(aux,$4);
+														addChild($$,aux);
+														root = $$;
+													}
+												}
+
 
 InitDeclaration: /*empty*/						{if (contaErros == 0){;}}
 			| InitDeclaration FieldDecl			{if (contaErros == 0){;}}
@@ -115,7 +125,12 @@ InitDeclaration: /*empty*/						{if (contaErros == 0){;}}
 *********************************************************************/
 FieldDecl: PUBLIC STATIC Type ID SEMI				{if (contaErros == 0){;}}
 			| PUBLIC STATIC Type ID CommaID SEMI	{if (contaErros == 0){;}}
-			| error SEMI							{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
+			| error SEMI							{$$ = NULL;
+													 if (contaErros == 0){
+													 	clearTree(root);
+													 	contaErros++;
+													 }
+													}
 			;
 
 CommaID: COMMA ID 						{if (contaErros == 0){;}}
@@ -205,7 +220,12 @@ Statement: OBRACE CBRACE											{if (contaErros == 0){;}}
 		| ParseArgs SEMI											{if (contaErros == 0){;}}
 		| RETURN SEMI												{if (contaErros == 0){;}}
 		| RETURN Expr SEMI											{if (contaErros == 0){;}}
-		| error SEMI												{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
+		| error SEMI												{$$ = NULL;
+													 				 if (contaErros == 0){
+													 					clearTree(root);
+													 					contaErros++;
+													 				 }
+																	}
 		;
 
 
@@ -221,7 +241,12 @@ Assignment: ID ASSIGN Expr 									{if (contaErros == 0){;}}
 MethodInvocation: ID OCURV CCURV							{if (contaErros == 0){;}}
 				| ID OCURV Expr CCURV						{if (contaErros == 0){;}}
 				| ID OCURV Expr CommaExpr CCURV				{if (contaErros == 0){;}}
-				| ID OCURV error CCURV						{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
+				| ID OCURV error CCURV						{$$ = NULL;
+															 if (contaErros == 0){
+													 			clearTree(root);
+													 			contaErros++;
+													 		 }
+															}
 				;
 
 CommaExpr: COMMA Expr 									{if (contaErros == 0){;}}
@@ -233,7 +258,12 @@ CommaExpr: COMMA Expr 									{if (contaErros == 0){;}}
 * ParseArgs → PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			 *
 *********************************************************************/
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{if (contaErros == 0){;}}
-		| PARSEINT OCURV error CCURV							{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
+		| PARSEINT OCURV error CCURV							{$$ = NULL;
+																 if (contaErros == 0){
+													 				clearTree(root);
+													 				contaErros++;
+																 }
+																}
 		;
 
 
@@ -272,7 +302,12 @@ Expr: Assignment								{if (contaErros == 0){;}}
 		| BOOLLIT 								{if (contaErros == 0){;}}
 		| DECLIT 								{if (contaErros == 0){;}}
 		| REALLIT								{if (contaErros == 0){;}}
-		| OCURV error CCURV						{$$ = NULL; if (contaErros == 0){clearTree(root);}; contaErros++;}
+		| OCURV error CCURV						{$$ = NULL;
+												 if (contaErros == 0){
+												 	clearTree(root);
+												 	contaErros++;
+												 }
+												}
 		;
 
 %%

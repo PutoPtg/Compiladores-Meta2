@@ -1,3 +1,3 @@
 lex jac.l
 yacc -d -v jac.y
-cc -o jac y.tab.c lex.yy.c
+gcc -g -o jac y.tab.c lex.yy.c tree.c -ll -ly
