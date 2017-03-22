@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.02
+*Versão 0.03
 ************************************************************************************/
 
 #include <stdlib.h>
@@ -93,6 +93,45 @@ void printTree(node* current, int level)
     {
         return;
     }
+    int i;
+   
+
+    
+
+    for(i=0; i<level; i++)
+        {
+            printf("..");
+        }
+        if(current->nodeType == ID_node)
+        {
+            printf("Id(%s)\n",current->var);
+        }
+        else if(current->nodeType == BOOLLIT_node)
+        {
+            printf("BoolLit(%s)\n", current->var);
+        }
+        else if(current->nodeType == DECLIT_node)
+        {
+            printf("DecLit(%s)\n", current->var);
+        }
+        else if(current->nodeType == STRLIT_node)
+        {
+            printf("StrLit(%s)\n", current->var);
+        }
+        else if(current->nodeType == REALLIT_node)
+        {
+            printf("RealLit(%s)\n", current->var);
+        }
+        else
+        {
+            printf("%s\n", current->nodeTypeName);
+        }
+        for(i=0; i<current->numChildren; i++)
+        {
+            printTree(current->children[i], level+1);
+        }
+
+
     /*
     int k,i,j,conta_ponteiro;
     if(current->nodeType == DECL_node){
