@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.01
+*Versão 0.02
 ************************************************************************************/
 
 
@@ -13,21 +13,14 @@ Ficheiro - jac.y
 *************************************************************************************
 23-3-17
 TODO - O erro do "System.out.printf" tem a ver com o if<->else, o que quer que se meta após aquele else dá erro de sintaxe.
-DONE - Usei NULL em vez de VAR para evitar ponteiros a apontar para locais na memória, sei que funcionava com VAR mas basta
-		um erro num ponteiro para que ele passe a apontar para sei lá onde. Assim criei espaços únicos para cada var e as
-		vazias passam a estar todas a apontar para NULL.
-TODO - A declaração de vários 'int' separados por virgulas não imprime conforme o enunciado - ver printscreen em anexo
 
+TODO - A declaração de vários 'int' separados por virgulas não imprime conforme o enunciado - ver printscreen em anexo. Tentei resolver o problemas mas ainda não está conforme. PS: deixei as regras tais como tu tinhas.
 
-*************************************************************************************
-Ficheiro - jac.l
-*************************************************************************************
-23-3-17
-TODO - STRLIT já testado e passa bem a string mas falta testar os outros que têm coisas a passar
-
+DONE - restante árvore conforme enunciado.
 
 *************************************************************************************
-Ficheiro - tree.c
+Ficheiro - jac.l e tree.c
 *************************************************************************************
 23-3-17
-DONE - Adicionei uma variável de DEBUG no início do ficheiro, dá jeito para encontrar ponteiros perdidos
+Nada a assinalar.
+
