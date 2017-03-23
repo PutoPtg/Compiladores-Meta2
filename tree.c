@@ -4,13 +4,19 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.03
+*Versão 0.04
 ************************************************************************************/
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "tree.h"
+
+/************************************************************************************
+* 1 - mostra os valores a serem colocados nos nós na sua criação					*
+* 2 - mostra os valores dos nós a serem juntos pai e filho							*
+************************************************************************************/
+int DEBUG = 0;
 
 /************************************************************************************
 * DESCRIÇÃO: Cria um nó para a Árvore												*
@@ -24,12 +30,19 @@ node* createNode(node_type nodeType, char* nodeTypeName, char* var)
     result->nodeType = nodeType;
     result->nodeTypeName = (char*)malloc((strlen(nodeTypeName)+1)*sizeof(char));
     strcpy(result->nodeTypeName, nodeTypeName);
-    result->var = var;
+    if(var != NULL){
+    	result->var = (char*)malloc((strlen(var)+1)*sizeof(char));
+    	strcpy(result->var, var);
+    }
+    else{
+    	result->var = NULL;
+    }
     result->numChildren = 0;
     result->children = NULL;
     result->parent = NULL;
     result->left = NULL;
     result->right = NULL;
+    if (DEBUG == 1){printf("*********%s : %s\n", result->nodeTypeName, result->var);}
     return result;
 }
 
@@ -44,6 +57,7 @@ void addChild(node* parent, node* child)
     {
         return;
     }
+    if(DEBUG == 2){printf("+++++++++Parent %s : %s ++++++Child %s : %s\n ", parent->nodeTypeName, parent->var, child->nodeTypeName, child->var);}
     parent->numChildren++;
     parent->children = (node**)realloc(parent->children, parent->numChildren*sizeof(node*));
     parent->children[parent->numChildren-1] = child;
@@ -94,9 +108,9 @@ void printTree(node* current, int level)
         return;
     }
     int i;
-   
 
-    
+
+
 
     for(i=0; i<level; i++)
         {
@@ -334,6 +348,7 @@ void printTree(node* current, int level)
         }
     }*/
 }
+
 
 
 /************************************************************************************

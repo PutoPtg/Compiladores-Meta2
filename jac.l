@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.3
+*Versão 1.4
 ************************************************************************************/
 
 %X COMMENT
@@ -14,6 +14,8 @@
 %{
 	#include <string.h>
 	#include <stdlib.h>
+	#include <ctype.h>
+	#include <string.h>
 	#include <stdio.h>
 	#include "y.tab.h"
 	#include "tree.h"
@@ -53,20 +55,20 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 <STR>{seqEscape}					{contaColuna+=yyleng;}
 <STR>\\.|\\							{printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext);contaColuna+=yyleng; goodSTR=0;}
 <STR><<EOF>>						{contaColuna+=yyleng;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[0]);BEGIN 0;}
-<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char));strncpy(yylval.val,yytext,yyleng); BEGIN 0; return STRLIT;}}
+<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); BEGIN 0; return STRLIT;}}
 <STR>\n|\r|\r\n 					{contaLinha++; contaColuna=1;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]);BEGIN 0;}
 <STR>.								{contaColuna+=yyleng;}
 
-{digito}"."{digito}{expoente}		{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
-{digito}"."({digito}|{expoente})?	{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
-"."{digito}{expoente}?				{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
-{digito}{expoente}					{if(valorL==1){printf("REALLIT(%s)\n", yytext);}contaColuna+=yyleng; return REALLIT;}
+{digito}"."{digito}{expoente}		{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+{digito}"."({digito}|{expoente})?	{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+"."{digito}{expoente}?				{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+{digito}{expoente}					{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
 
-0|[1-9]+|[1-9]+[0-9_]*[0-9]+		{if(valorL==1){printf("DECLIT(%s)\n", yytext);}contaColuna+=yyleng; return DECLIT;}
+0|[1-9]+|[1-9]+[0-9_]*[0-9]+		{contaColuna+=yyleng; if(valorL==1){printf("DECLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return DECLIT;}
 
 {reserved}							{if(valorL==1){printf("RESERVED(%s)\n", yytext);}contaColuna+=yyleng; return RESERVED;}
 "boolean"							{if(valorL==1){printf("BOOL\n");}contaColuna+=yyleng; return BOOL;}
-"true"|"false"						{if(valorL==1){printf("BOOLLIT(%s)\n",yytext);}contaColuna+=yyleng; return BOOLLIT;}
+"true"|"false"						{contaColuna+=yyleng; if(valorL==1){printf("BOOLLIT(%s)\n",yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return BOOLLIT;}
 "class"								{if(valorL==1){printf("CLASS\n");}contaColuna+=yyleng; return CLASS;}
 "do"								{if(valorL==1){printf("DO\n");}contaColuna+=yyleng; return DO;}
 ".length"							{if(valorL==1){printf("DOTLENGTH\n");}contaColuna+=yyleng; return DOTLENGTH;}
@@ -105,7 +107,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 "="									{if(valorL==1){printf("ASSIGN\n");}contaColuna+=yyleng; return ASSIGN;}
 ";"									{if(valorL==1){printf("SEMI\n");}contaColuna+=yyleng; return SEMI;}
 ","									{if(valorL==1){printf("COMMA\n");}contaColuna+=yyleng; return COMMA;}
-[a-zA-Z_$][a-zA-Z0-9_$]*			{if(valorL==1){printf("ID(%s)\n", yytext);}contaColuna+=yyleng; return ID;}
+[a-zA-Z_$][a-zA-Z0-9_$]*			{contaColuna+=yyleng; if(valorL==1){printf("ID(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return ID;}
 "\n"								{contaLinha++;contaColuna=1;}
 "\r"								{contaLinha++;contaColuna=1;}
 "\r\n"								{contaLinha++;contaColuna=1;}
