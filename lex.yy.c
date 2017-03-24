@@ -705,7 +705,7 @@ char *yytext;
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.4
+*Versão 1.5
 ************************************************************************************/
 
 
@@ -723,13 +723,14 @@ char *yytext;
 	extern int valorL;
 	extern int valor1;
 	extern int valorNull;
+	extern int valorT;
 	long long int contaLinha = 1;
 	long long int contaColuna = 1;
 	long long int commentPos[2];
 	long long int stringPos[2];
 	int goodSTR = 0;
 	char* auxStr;
-#line 733 "lex.yy.c"
+#line 734 "lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -914,10 +915,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 42 "jac.l"
+#line 43 "jac.l"
 
 
-#line 921 "lex.yy.c"
+#line 922 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1002,358 +1003,358 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 44 "jac.l"
+#line 45 "jac.l"
 {BEGIN COMMENT; commentPos[0] = contaLinha; commentPos[1] = contaColuna; contaColuna+=yyleng;}
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 45 "jac.l"
-{printf("Line %lld, col %lld: unterminated comment\n", commentPos[0], commentPos[1]); contaColuna+=yyleng; BEGIN 0; } /*erro de unterminated comment*/
+#line 46 "jac.l"
+{if(valorT==0){printf("Line %lld, col %lld: unterminated comment\n", commentPos[0], commentPos[1]);} contaColuna+=yyleng; BEGIN 0; } /*erro de unterminated comment*/
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 46 "jac.l"
+#line 47 "jac.l"
 {contaColuna+=yyleng;BEGIN 0;} /*Comentário*/
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 47 "jac.l"
+#line 48 "jac.l"
 {contaLinha++;contaColuna=1;}	/*incrementa linha*/
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 48 "jac.l"
+#line 49 "jac.l"
 {contaColuna+=yyleng;}	/*incrementa coluna*/
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 50 "jac.l"
+#line 51 "jac.l"
 {BEGIN JAVACOMMENT; contaColuna+=yyleng;}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 51 "jac.l"
+#line 52 "jac.l"
 {contaLinha++;contaColuna=1;BEGIN 0;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 52 "jac.l"
+#line 53 "jac.l"
 {contaColuna+=yyleng;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 54 "jac.l"
+#line 55 "jac.l"
 {BEGIN STR; stringPos[0] = contaLinha; stringPos[1] = contaColuna; contaColuna+=yyleng; goodSTR = 1; auxStr = yytext;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 55 "jac.l"
+#line 56 "jac.l"
 {contaColuna+=yyleng;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 56 "jac.l"
-{printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext);contaColuna+=yyleng; goodSTR=0;}
+#line 57 "jac.l"
+{if(valorT==0){printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext);} contaColuna+=yyleng; goodSTR=0;}
 	YY_BREAK
 case YY_STATE_EOF(STR):
-#line 57 "jac.l"
-{contaColuna+=yyleng;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[0]);BEGIN 0;}
+#line 58 "jac.l"
+{contaColuna+=yyleng; if(valorT==0){printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[0]);} BEGIN 0;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 58 "jac.l"
-{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); BEGIN 0; return STRLIT;}}
+#line 59 "jac.l"
+{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1 || valorT==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); return STRLIT;} BEGIN 0;}
 	YY_BREAK
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 59 "jac.l"
-{contaLinha++; contaColuna=1;printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]);BEGIN 0;}
+#line 60 "jac.l"
+{contaLinha++; contaColuna=1; if(valorT==0){printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]);} BEGIN 0;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 60 "jac.l"
+#line 61 "jac.l"
 {contaColuna+=yyleng;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 62 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+#line 63 "jac.l"
+{if(valorL==1){printf("REALLIT(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return REALLIT;}}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 63 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+#line 64 "jac.l"
+{if(valorL==1){printf("REALLIT(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return REALLIT;}}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 64 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+#line 65 "jac.l"
+{if(valorL==1){printf("REALLIT(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return REALLIT;}}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 65 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("REALLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return REALLIT;}
+#line 66 "jac.l"
+{if(valorL==1){printf("REALLIT(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return REALLIT;}}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 67 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("DECLIT(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return DECLIT;}
+#line 68 "jac.l"
+{if(valorL==1){printf("DECLIT(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return DECLIT;}}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 69 "jac.l"
-{if(valorL==1){printf("RESERVED(%s)\n", yytext);}contaColuna+=yyleng; return RESERVED;}
+#line 70 "jac.l"
+{if(valorL==1){printf("RESERVED(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return RESERVED;}}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 70 "jac.l"
-{if(valorL==1){printf("BOOL\n");}contaColuna+=yyleng; return BOOL;}
+#line 71 "jac.l"
+{if(valorL==1){printf("BOOL\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return BOOL;}}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 71 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("BOOLLIT(%s)\n",yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return BOOLLIT;}
+#line 72 "jac.l"
+{if(valorL==1){printf("BOOLLIT(%s)\n",yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return BOOLLIT;}}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 72 "jac.l"
-{if(valorL==1){printf("CLASS\n");}contaColuna+=yyleng; return CLASS;}
+#line 73 "jac.l"
+{if(valorL==1){printf("CLASS\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return CLASS;}}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 73 "jac.l"
-{if(valorL==1){printf("DO\n");}contaColuna+=yyleng; return DO;}
+#line 74 "jac.l"
+{if(valorL==1){printf("DO\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return DO;}}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 74 "jac.l"
-{if(valorL==1){printf("DOTLENGTH\n");}contaColuna+=yyleng; return DOTLENGTH;}
+#line 75 "jac.l"
+{if(valorL==1){printf("DOTLENGTH\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return DOTLENGTH;}}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 75 "jac.l"
-{if(valorL==1){printf("DOUBLE\n");}contaColuna+=yyleng; return DOUBLE;}
+#line 76 "jac.l"
+{if(valorL==1){printf("DOUBLE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return DOUBLE;}}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 76 "jac.l"
-{if(valorL==1){printf("ELSE\n");}contaColuna+=yyleng; return ELSE;}
+#line 77 "jac.l"
+{if(valorL==1){printf("ELSE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return ELSE;}}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 77 "jac.l"
-{if(valorL==1){printf("IF\n");}contaColuna+=yyleng; return IF;}
+#line 78 "jac.l"
+{if(valorL==1){printf("IF\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return IF;}}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 78 "jac.l"
-{if(valorL==1){printf("INT\n");}contaColuna+=yyleng; return INT;}
+#line 79 "jac.l"
+{if(valorL==1){printf("INT\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return INT;}}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 79 "jac.l"
-{if(valorL==1){printf("PARSEINT\n");}contaColuna+=yyleng; return PARSEINT;}
+#line 80 "jac.l"
+{if(valorL==1){printf("PARSEINT\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return PARSEINT;}}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 80 "jac.l"
-{if(valorL==1){printf("PRINT\n");}contaColuna+=yyleng; return PRINT;}
+#line 81 "jac.l"
+{if(valorL==1){printf("PRINT\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return PRINT;}}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 81 "jac.l"
-{if(valorL==1){printf("PUBLIC\n");}contaColuna+=yyleng; return PUBLIC;}
+#line 82 "jac.l"
+{if(valorL==1){printf("PUBLIC\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return PUBLIC;}}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 82 "jac.l"
-{if(valorL==1){printf("RETURN\n");}contaColuna+=yyleng; return RETURN;}
+#line 83 "jac.l"
+{if(valorL==1){printf("RETURN\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return RETURN;}}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 83 "jac.l"
-{if(valorL==1){printf("STATIC\n");}contaColuna+=yyleng; return STATIC;}
+#line 84 "jac.l"
+{if(valorL==1){printf("STATIC\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return STATIC;}}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 84 "jac.l"
-{if(valorL==1){printf("STRING\n");}contaColuna+=yyleng; return STRING;}
+#line 85 "jac.l"
+{if(valorL==1){printf("STRING\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return STRING;}}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 85 "jac.l"
-{if(valorL==1){printf("VOID\n");}contaColuna+=yyleng; return VOID;}
+#line 86 "jac.l"
+{if(valorL==1){printf("VOID\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return VOID;}}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 86 "jac.l"
-{if(valorL==1){printf("WHILE\n");}contaColuna+=yyleng; return WHILE;}
+#line 87 "jac.l"
+{if(valorL==1){printf("WHILE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return WHILE;}}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 87 "jac.l"
-{if(valorL==1){printf("OCURV\n");}contaColuna+=yyleng; return OCURV;}
+#line 88 "jac.l"
+{if(valorL==1){printf("OCURV\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return OCURV;}}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 88 "jac.l"
-{if(valorL==1){printf("CCURV\n");}contaColuna+=yyleng; return CCURV;}
+#line 89 "jac.l"
+{if(valorL==1){printf("CCURV\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return CCURV;}}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 89 "jac.l"
-{if(valorL==1){printf("OBRACE\n");}contaColuna+=yyleng; return OBRACE;}
+#line 90 "jac.l"
+{if(valorL==1){printf("OBRACE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){return OBRACE;}}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 90 "jac.l"
-{if(valorL==1){printf("CBRACE\n");}contaColuna+=yyleng; return CBRACE;}
+#line 91 "jac.l"
+{if(valorL==1){printf("CBRACE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return CBRACE;}}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 91 "jac.l"
-{if(valorL==1){printf("OSQUARE\n");}contaColuna+=yyleng; return OSQUARE;}
+#line 92 "jac.l"
+{if(valorL==1){printf("OSQUARE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return OSQUARE;}}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 92 "jac.l"
-{if(valorL==1){printf("CSQUARE\n");}contaColuna+=yyleng; return CSQUARE;}
+#line 93 "jac.l"
+{if(valorL==1){printf("CSQUARE\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return CSQUARE;}}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 93 "jac.l"
-{if(valorL==1){printf("AND\n");}contaColuna+=yyleng; return AND;}
+#line 94 "jac.l"
+{if(valorL==1){printf("AND\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return AND;}}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 94 "jac.l"
-{if(valorL==1){printf("OR\n");}contaColuna+=yyleng; return OR;}
+#line 95 "jac.l"
+{if(valorL==1){printf("OR\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return OR;}}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 95 "jac.l"
-{if(valorL==1){printf("LT\n");}contaColuna+=yyleng; return LT;}
+#line 96 "jac.l"
+{if(valorL==1){printf("LT\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return LT;}}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 96 "jac.l"
-{if(valorL==1){printf("GT\n");}contaColuna+=yyleng; return GT;}
+#line 97 "jac.l"
+{if(valorL==1){printf("GT\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return GT;}}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 97 "jac.l"
-{if(valorL==1){printf("EQ\n");}contaColuna+=yyleng; return EQ;}
+#line 98 "jac.l"
+{if(valorL==1){printf("EQ\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return EQ;}}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 98 "jac.l"
-{if(valorL==1){printf("NEQ\n");}contaColuna+=yyleng; return NEQ;}
+#line 99 "jac.l"
+{if(valorL==1){printf("NEQ\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return NEQ;}}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 99 "jac.l"
-{if(valorL==1){printf("LEQ\n");}contaColuna+=yyleng; return LEQ;}
+#line 100 "jac.l"
+{if(valorL==1){printf("LEQ\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return LEQ;}}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 100 "jac.l"
-{if(valorL==1){printf("GEQ\n");}contaColuna+=yyleng; return GEQ;}
+#line 101 "jac.l"
+{if(valorL==1){printf("GEQ\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return GEQ;}}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 101 "jac.l"
-{if(valorL==1){printf("PLUS\n");}contaColuna+=yyleng; return PLUS;}
+#line 102 "jac.l"
+{if(valorL==1){printf("PLUS\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return PLUS;}}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 102 "jac.l"
-{if(valorL==1){printf("MINUS\n");}contaColuna+=yyleng; return MINUS;}
+#line 103 "jac.l"
+{if(valorL==1){printf("MINUS\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return MINUS;}}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 103 "jac.l"
-{if(valorL==1){printf("STAR\n");}contaColuna+=yyleng; return STAR;}
+#line 104 "jac.l"
+{if(valorL==1){printf("STAR\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return STAR;}}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 104 "jac.l"
-{if(valorL==1){printf("DIV\n");}contaColuna+=yyleng; return DIV;}
+#line 105 "jac.l"
+{if(valorL==1){printf("DIV\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return DIV;}}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 105 "jac.l"
-{if(valorL==1){printf("MOD\n");}contaColuna+=yyleng; return MOD;}
+#line 106 "jac.l"
+{if(valorL==1){printf("MOD\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return MOD;}}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 106 "jac.l"
-{if(valorL==1){printf("NOT\n");}contaColuna+=yyleng; return NOT;}
+#line 107 "jac.l"
+{if(valorL==1){printf("NOT\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return NOT;}}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 107 "jac.l"
-{if(valorL==1){printf("ASSIGN\n");}contaColuna+=yyleng; return ASSIGN;}
+#line 108 "jac.l"
+{if(valorL==1){printf("ASSIGN\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return ASSIGN;}}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 108 "jac.l"
-{if(valorL==1){printf("SEMI\n");}contaColuna+=yyleng; return SEMI;}
+#line 109 "jac.l"
+{if(valorL==1){printf("SEMI\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return SEMI;}}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 109 "jac.l"
-{if(valorL==1){printf("COMMA\n");}contaColuna+=yyleng; return COMMA;}
+#line 110 "jac.l"
+{if(valorL==1){printf("COMMA\n");} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return COMMA;}}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 110 "jac.l"
-{contaColuna+=yyleng; if(valorL==1){printf("ID(%s)\n", yytext);} if(valorNull==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng);} return ID;}
+#line 111 "jac.l"
+{if(valorL==1){printf("ID(%s)\n", yytext);} contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return ID;}}
 	YY_BREAK
 case 61:
 /* rule 61 can match eol */
 YY_RULE_SETUP
-#line 111 "jac.l"
+#line 112 "jac.l"
 {contaLinha++;contaColuna=1;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 112 "jac.l"
+#line 113 "jac.l"
 {contaLinha++;contaColuna=1;}
 	YY_BREAK
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
-#line 113 "jac.l"
+#line 114 "jac.l"
 {contaLinha++;contaColuna=1;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 114 "jac.l"
+#line 115 "jac.l"
 {contaColuna+=1;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 115 "jac.l"
+#line 116 "jac.l"
 {contaColuna+=1;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 116 "jac.l"
+#line 117 "jac.l"
 {contaColuna+=1;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 117 "jac.l"
-{printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna,yytext);contaColuna++;}
+#line 118 "jac.l"
+{if(valorT==0){printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna,yytext);} contaColuna++;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 120 "jac.l"
+#line 121 "jac.l"
 ECHO;
 	YY_BREAK
-#line 1357 "lex.yy.c"
+#line 1358 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(JAVACOMMENT):
 	yyterminate();
@@ -2351,7 +2352,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 120 "jac.l"
+#line 121 "jac.l"
 
 
 
