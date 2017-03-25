@@ -11,8 +11,7 @@ class gcd {
 					a = a-b;
 				else
 					b = b-a;
-			//System.out.println(a);
-			"dfdfd" "ddd
+			System.out.println(a);
 		}
 	}
-}
+/*

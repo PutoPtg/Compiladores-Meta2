@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.12																		*
+* Versão 0.13																	*
 ************************************************************************************/
 
 %{
@@ -18,7 +18,7 @@
 	#define VAR (char*)calloc(1,sizeof(char))
 
 	int yylex(void);
-	int yyerror(char *s);
+	int yyerror(const char *s);
 
 	extern long long int contaLinha;
 	extern long long int contaColuna;
@@ -95,9 +95,8 @@
 %left PLUS MINUS
 %left STAR DIV MOD
 %right NOT
-%left CBRACE CCURV CSQUARE OBRACE OCURV OSQUARE
 
-%type <no> Program InitDeclaration FieldDecl CommaID MethodDecl MethodHeader MethodBody MethodParams FormalParams CommaTypeID VarDecl VarBody Type Statement Assignment MethodInvocation CommaExpr ParseArgs Expr ParamDecl
+%type <no> Program InitDeclaration FieldDecl CommaID MethodDecl MethodHeader MethodBody MethodParams FormalParams CommaTypeID VarDecl VarBody Type Statement Assignment MethodInvocation CommaExpr ParseArgs Expr ParamDecl StatementList
 
 %%
 
@@ -405,10 +404,9 @@ Type: BOOL 											{
 * Statement → RETURN [ Expr ] SEMI									 *
 *********************************************************************/
 Statement: OBRACE CBRACE											{if (contaErros == 0 && valorT == 1){;}}
-		| OBRACE Statement CBRACE									{
+		| OBRACE StatementList CBRACE								{
 																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "Block", NULL);
-																			addChild($$,$2);
+																			$$ = $2;
 																		}
 																	}
 		| IF OCURV Expr CCURV Statement %prec LOWER_THAN_ELSE 		{
@@ -474,6 +472,22 @@ Statement: OBRACE CBRACE											{if (contaErros == 0 && valorT == 1){;}}
 		| error SEMI												{;}
 		;
 
+StatementList: 	Statement 					{
+												if (contaErros == 0 && valorT == 1){
+													$$ = createNode(OTHER_node, "Block", NULL);
+													addChild($$,$1);
+												}
+											}
+		|		StatementList Statement   	{
+												if (contaErros == 0 && valorT == 1){
+													$$ = $1;
+													aux = createNode(OTHER_node, "Block", NULL);
+													addChild(aux,$2);
+													addBrother($$,$2);
+												}
+											}
+		;
+
 
 /*********************************************************************
 * Assignment → ID ASSIGN Expr										 *
@@ -491,9 +505,24 @@ Assignment: ID ASSIGN Expr 									{
 /*********************************************************************
 * MethodInvocation → ID OCURV [ Expr { COMMA Expr } ] CCURV 		 *
 *********************************************************************/
-MethodInvocation: ID OCURV CCURV							{if (contaErros == 0 && valorT == 1){;}}
-				| ID OCURV Expr CCURV						{if (contaErros == 0 && valorT == 1){;}}
-				| ID OCURV Expr CommaExpr CCURV				{if (contaErros == 0 && valorT == 1){;}}
+MethodInvocation: ID OCURV CCURV							{
+																if (contaErros == 0 && valorT == 1){
+																	$$ = createNode(ID_node, "Id", $1);
+																}
+															}
+				| ID OCURV Expr CCURV						{
+																if (contaErros == 0 && valorT == 1){
+																	$$ = createNode(ID_node, "Id", $1);
+																	addBrother($$,$3);
+																}
+															}
+				| ID OCURV Expr CommaExpr CCURV				{
+																if (contaErros == 0 && valorT == 1){
+																	$$ = createNode(ID_node, "Id", $1);
+																	addBrother($$,$3);
+																	addBrother($3,$4);
+																}
+															}
 				| ID OCURV error CCURV						{;}
 				;
 
@@ -689,9 +718,9 @@ Expr: Assignment								{
 %%
 
 /* Função de erros */
-int yyerror(char *s){
-    printf("Line %lld, col %lld: %s: %s\n", contaLinha, contaColuna, s, yytext);
-    contaErros++;
+int yyerror(const char *s){
+	printf("Line %lld, col %lld: %s: %s\n", contaLinha, contaColuna-strlen(yytext), s, yytext); 
+	contaErros++;
     return 0;
 }
 

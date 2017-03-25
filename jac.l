@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.5
+*Versão 1.6
 ************************************************************************************/
 
 %X COMMENT
@@ -19,7 +19,7 @@
 	#include <stdio.h>
 	#include "y.tab.h"
 	#include "tree.h"
-	void yyerror(char *s);
+	void yyerror(const char *s);
 
 	extern int valorL;
 	extern int valor1;
@@ -56,7 +56,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 <STR>{seqEscape}					{contaColuna+=yyleng;}
 <STR>\\.|\\							{if(valorT==0){printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext);} contaColuna+=yyleng; goodSTR=0;}
 <STR><<EOF>>						{contaColuna+=yyleng; if(valorT==0){printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[0]);} BEGIN 0;}
-<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1 || valorT==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); return STRLIT;} BEGIN 0;}
+<STR>"\""							{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1 || valorT==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); yytext = auxStr; return STRLIT;} BEGIN 0;}
 <STR>\n|\r|\r\n 					{contaLinha++; contaColuna=1; if(valorT==0){printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]);} BEGIN 0;}
 <STR>.								{contaColuna+=yyleng;}
 
@@ -115,7 +115,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 " "									{contaColuna+=1;}
 "\t"								{contaColuna+=1;}
 "\f"								{contaColuna+=1;}
-.									{if(valorT==0){printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna,yytext);} contaColuna++;}
+.									{contaColuna++;if(valorT==0){printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna-yyleng,yytext);} }
 
 
 %%

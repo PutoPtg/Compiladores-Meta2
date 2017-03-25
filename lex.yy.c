@@ -705,7 +705,7 @@ char *yytext;
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.5
+*Versão 1.6
 ************************************************************************************/
 
 
@@ -718,7 +718,7 @@ char *yytext;
 	#include <stdio.h>
 	#include "y.tab.h"
 	#include "tree.h"
-	void yyerror(char *s);
+	void yyerror(const char *s);
 
 	extern int valorL;
 	extern int valor1;
@@ -1019,7 +1019,7 @@ case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
 #line 48 "jac.l"
-{contaLinha++;contaColuna=1;}	/*incrementa linha*/
+{contaLinha++;contaColuna=0;}	/*incrementa linha*/
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
@@ -1064,7 +1064,7 @@ case YY_STATE_EOF(STR):
 case 11:
 YY_RULE_SETUP
 #line 59 "jac.l"
-{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1 || valorT==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); return STRLIT;} BEGIN 0;}
+{contaColuna+=yyleng;if(valorL==1 && goodSTR==1){printf("STRLIT(%s)\n", auxStr);} if(valorNull==1 || valorT==1){yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,auxStr,strlen(auxStr)); yytext = auxStr; return STRLIT;} BEGIN 0;}
 	YY_BREAK
 case 12:
 /* rule 12 can match eol */
@@ -1347,7 +1347,7 @@ YY_RULE_SETUP
 case 67:
 YY_RULE_SETUP
 #line 118 "jac.l"
-{if(valorT==0){printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna,yytext);} contaColuna++;}
+{contaColuna++;if(valorT==0){printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna,yytext);} }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
