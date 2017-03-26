@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.13																	*
+* Versão 0.14																	*
 ************************************************************************************/
 
 %{
@@ -23,6 +23,8 @@
 	extern long long int contaLinha;
 	extern long long int contaColuna;
 	extern char* yytext;
+
+	extern long long int iTC; //serve para salvar o início da coluna de um token
 
 	int valor1=0;
 	int valorT=0;
@@ -134,10 +136,10 @@ InitDeclaration: FieldDecl						{
 													if(contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "MethodDecl", NULL);
 														addChild($$,$1);
-													}		
+													}
 												}
 			| SEMI								{;}
-			| InitDeclaration FieldDecl			{	
+			| InitDeclaration FieldDecl			{
 													if(contaErros == 0 && valorT == 1){
 														$$ = $1;
 														aux = createNode(OTHER_node, "FieldDecl", NULL);
@@ -367,7 +369,7 @@ VarBody: COMMA ID 								{
 															$$ = $1;
 															aux = createNode(ID_node, "Id", $3);
 															addBrother($$,aux);
-															
+
 														}
 													}
 		;
@@ -719,7 +721,7 @@ Expr: Assignment								{
 
 /* Função de erros */
 int yyerror(const char *s){
-	printf("Line %lld, col %lld: %s: %s\n", contaLinha, contaColuna-strlen(yytext), s, yytext); 
+	printf("Line %lld, col %lld: %s: %s\n", contaLinha, iTC, s, yytext);
 	contaErros++;
     return 0;
 }

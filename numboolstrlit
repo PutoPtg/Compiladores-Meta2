@@ -1,0 +1,60 @@
+/*DECLIT*/
+/*int Literals como na documentação*/
+0+2 2
+1996
+/*na doc mas fora das specs do projeto:
+0372    0xDada_Cafe		0l    0777L    0x100000000L    2_147_483_648L    0xC0B0L		0x00_FF__00_FF*/
+
+/*exemplos como na descrição do enunciado*/
+1234
+0
+1_2_3_4_5_6
+2_23856
+5_6484558
+/*ERRADOS*/
+01235 //não sei se está a falhar neste
+_129859
+1745_
+
+/*REALIT*/
+/*como no enunciado*/
+12.
+12.12
+.065
+12.e12
+12.e-12
+12.e+12
+.e+12
+.e-12
+12.E12
+12.E-12
+12.e+12
+.E+12
+.E-12
+1_2.E1_2
+1_2.E-1_2
+1_22.e+1_2
+.E+1_2
+.E-1_2
+/*ERRADOS*/
+_123.7
+123._23
+123e12
+_.1234
+
+/*BOOLEANOS*/
+true
+false
+
+/*ERRADOS*/
+True
+False
+
+/*STRLIT*/
+"abdcaba"
+"abdcada \n"
+
+/*ERRADOS*/
+"dfgh
+""sdfdfghjghfgdfd"
+"sdfghjgf\e"
