@@ -4,7 +4,9 @@ class raios {
 public static int  main (String args[){} //deteta
 public static boolean policia (){}
 public static double compiladores (){}
-public static void compGrafica (){}
+public static void compGrafica (){
+System.out.println("String");
+}
 
 public static int buba;
 public static int licious;

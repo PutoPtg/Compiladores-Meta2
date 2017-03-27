@@ -2715,6 +2715,7 @@ int main(int argc, char *argv[])
     }
     else if(argv[1] == NULL){
             valorNull = 1;
+            valorT = 1;
             yyparse();
     }
 

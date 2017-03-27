@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.02
+*Versão 0.03
 ************************************************************************************/
 
 
@@ -18,9 +18,19 @@ TODO - A declaração de vários 'int' separados por virgulas não imprime confo
 
 DONE - restante árvore conforme enunciado.
 
+27-3-17
+TODO - Verificar se a Linha 748 é a solução ou se interpretei mal (Manuel)
+TODO - Resolver SegFault Na nos testes C e E
+
 *************************************************************************************
-Ficheiro - jac.l e tree.c
+Ficheiro - jac.l
 *************************************************************************************
 23-3-17
-Nada a assinalar.
+TODO - Algo anda mal nas colunas ainda pois não dá os 50 pontos nos B
+WARNING! - o ficheiro nas versões do 1.5 ao 1.7 DÁ ERRO DE STRLIT, NÂO USAR EM DEBUGS FUTUROS
+*************************************************************************************
+Ficheiro - jac.l
+*************************************************************************************
+273-17
 
+TODO - Resolver SegFault Na nos testes C e E

@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.7
+*Versão 1.8
 ************************************************************************************/
 
 %X COMMENT
@@ -112,12 +112,12 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 ";"									{if(valorL==1){printf("SEMI\n");} iTC = contaColuna; contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return SEMI;}}
 ","									{if(valorL==1){printf("COMMA\n");} iTC = contaColuna; contaColuna+=yyleng; if(valorNull==1 || valorT==1){ return COMMA;}}
 [a-zA-Z_$][a-zA-Z0-9_$]*			{if(valorL==1){printf("ID(%s)\n", yytext);} iTC = contaColuna; contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return ID;}}
-"\n"								{iTC = contaColuna; contaLinha++;contaColuna=1;}
-"\r"								{iTC = contaColuna; contaLinha++;contaColuna=1;}
-"\r\n"								{iTC = contaColuna; contaLinha++;contaColuna=1;}
-" "									{iTC = contaColuna; contaColuna+=1;}
-"\t"								{iTC = contaColuna; contaColuna+=1;}
-"\f"								{iTC = contaColuna; contaColuna+=1;}
+"\n"								{contaLinha++; contaColuna=1; iTC = contaColuna;}
+"\r"								{contaLinha++;contaColuna=1; iTC = contaColuna;}
+"\r\n"								{contaLinha++;contaColuna=1; iTC = contaColuna;}
+" "									{contaColuna+=1; iTC = contaColuna;}
+"\t"								{contaColuna+=1; iTC = contaColuna;}
+"\f"								{contaColuna+=1; iTC = contaColuna;}
 .									{iTC = contaColuna; contaColuna++;if(valorT==0){printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna-yyleng,yytext);} }
 
 

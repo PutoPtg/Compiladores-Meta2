@@ -720,7 +720,7 @@ char *yytext;
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.6
+*Versão 1.7
 ************************************************************************************/
 
 
@@ -1344,33 +1344,33 @@ case 61:
 /* rule 61 can match eol */
 YY_RULE_SETUP
 #line 115 "jac.l"
-{iTC = contaColuna; contaLinha++;contaColuna=1;}
+{contaLinha++; contaColuna=1; iTC = contaColuna;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
 #line 116 "jac.l"
-{iTC = contaColuna; contaLinha++;contaColuna=1;}
+{contaLinha++;contaColuna=1; iTC = contaColuna;}
 	YY_BREAK
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
 #line 117 "jac.l"
-{iTC = contaColuna; contaLinha++;contaColuna=1;}
+{contaLinha++;contaColuna=1; iTC = contaColuna;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 118 "jac.l"
-{iTC = contaColuna; contaColuna+=1;}
+{contaColuna+=1; iTC = contaColuna;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
 #line 119 "jac.l"
-{iTC = contaColuna; contaColuna+=1;}
+{contaColuna+=1; iTC = contaColuna;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
 #line 120 "jac.l"
-{iTC = contaColuna; contaColuna+=1;}
+{contaColuna+=1; iTC = contaColuna;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP

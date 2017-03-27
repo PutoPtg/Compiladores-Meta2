@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.14																	*
+* Versão 0.15																	*
 ************************************************************************************/
 
 %{
@@ -745,6 +745,7 @@ int main(int argc, char *argv[])
     }
     else if(argv[1] == NULL){
             valorNull = 1;
+            valorT = 1;   //<<<<<<<<<<<<<<<<<<<<<-Faltava Isto!
             yyparse();
     }
 
