@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.15																	*
+* Versão 0.16																	*
 ************************************************************************************/
 
 %{
@@ -23,8 +23,6 @@
 	extern long long int contaLinha;
 	extern long long int contaColuna;
 	extern char* yytext;
-
-	extern long long int iTC; //serve para salvar o início da coluna de um token
 
 	int valor1=0;
 	int valorT=0;
@@ -134,8 +132,8 @@ InitDeclaration: FieldDecl						{
 												}
 			| MethodDecl						{
 													if(contaErros == 0 && valorT == 1){
-														$$ = createNode(OTHER_node, "MethodDecl", NULL);
-														addChild($$,$1);
+														aux = createNode(OTHER_node, "MethodDecl", NULL);
+														addChild(aux,$1);
 													}
 												}
 			| SEMI								{;}
@@ -721,7 +719,7 @@ Expr: Assignment								{
 
 /* Função de erros */
 int yyerror(const char *s){
-	printf("Line %lld, col %lld: %s: %s\n", contaLinha, iTC, s, yytext);
+	printf("Line %lld, col %lld: %s: %s\n", contaLinha, contaColuna-strlen(yytext), s, yytext);
 	contaErros++;
     return 0;
 }
@@ -745,7 +743,6 @@ int main(int argc, char *argv[])
     }
     else if(argv[1] == NULL){
             valorNull = 1;
-            valorT = 1;   //<<<<<<<<<<<<<<<<<<<<<-Faltava Isto!
             yyparse();
     }
 

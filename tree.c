@@ -12,6 +12,8 @@
 #include <string.h>
 #include "tree.h"
 
+
+
 /************************************************************************************
 * 1 - mostra os valores a serem colocados nos nós na sua criação					*
 * 2 - mostra os valores dos nós a serem juntos pai e filho							*

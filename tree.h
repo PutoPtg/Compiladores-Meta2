@@ -12,6 +12,7 @@
 
 typedef enum {ID_node, STRLIT_node, BOOLLIT_node, DECLIT_node,OTHER_node, REALLIT_node} node_type;
 
+
 typedef struct node
 {
     struct node* parent;
