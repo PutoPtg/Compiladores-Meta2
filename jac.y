@@ -40,6 +40,7 @@
     struct node* no;
 };
 
+%token PRECEDENCE
 %token <val> STRLIT REALLIT DECLIT BOOLLIT ID
 %token BOOL
 %token INT
@@ -81,7 +82,6 @@
 %token ASSIGN
 %token SEMI
 %token COMMA
-%token DOTLENGHT
 
 %nonassoc LOWER_THAN_ELSE
 %nonassoc ELSE
@@ -95,8 +95,10 @@
 %left PLUS MINUS
 %left STAR DIV MOD
 %right NOT
+%right PRECEDENCE
+%left OBRACE OCURV OSQUARE CCURV CSQUARE CBRACE
 
-%type <no> Program InitDeclaration FieldDecl CommaID MethodDecl MethodHeader MethodBody MethodParams FormalParams CommaTypeID VarDecl VarBody Type Statement Assignment MethodInvocation CommaExpr ParseArgs Expr ParamDecl StatementList
+%type <no> Program InitDeclaration FieldDecl CommaID MethodDecl MethodHeader MethodBody MethodParams FormalParams CommaTypeID VarDecl VarBody Type Statement Assignment MethodInvocation CommaExpr ParseArgs Expr ParamDecl StatementList ExprAux
 
 %%
 
@@ -132,8 +134,8 @@ InitDeclaration: FieldDecl						{
 												}
 			| MethodDecl						{
 													if(contaErros == 0 && valorT == 1){
-														aux = createNode(OTHER_node, "MethodDecl", NULL);
-														addChild(aux,$1);
+														$$ = createNode(OTHER_node, "MethodDecl", NULL);
+														addChild($$,$1);
 													}
 												}
 			| SEMI								{;}
@@ -556,13 +558,12 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{
 * Expr → OCURV Expr CCURV											 *
 * Expr → BOOLLIT | DECLIT | REALLIT									 *
 *********************************************************************/
-Expr: Assignment								{
-													if (contaErros == 0 && valorT == 1){
-														$$ = $1;
 
-													}
-												}
-		| MethodInvocation						{
+Expr: Assignment								{;}
+	| ExprAux									{;}
+	;
+
+ExprAux: MethodInvocation						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = $1;
 													}
@@ -573,110 +574,110 @@ Expr: Assignment								{
 													}
 
 												}
-		| Expr AND Expr 						{
+		| ExprAux AND ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "And", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr OR Expr 							{
+		| ExprAux OR ExprAux 							{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Or", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr EQ Expr 							{
+		| ExprAux EQ ExprAux 							{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Eq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr GEQ Expr 						{
+		| ExprAux GEQ ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Geq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr GT Expr 							{
+		| ExprAux GT ExprAux							{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Gt", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr LEQ Expr 						{
+		| ExprAux LEQ ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Leq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr LT Expr 							{
+		| ExprAux LT ExprAux 							{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Lt", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr NEQ Expr 						{
+		| ExprAux NEQ ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Neq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr PLUS Expr 						{
+		| ExprAux PLUS ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Add", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr MINUS Expr 						{
+		| ExprAux MINUS ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Sub", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr STAR Expr 						{
+		| ExprAux STAR ExprAux 						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Mul", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr DIV Expr 						{
+		| ExprAux DIV ExprAux						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Div", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| Expr MOD Expr 						{
+		| ExprAux MOD ExprAux						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Mod", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| PLUS Expr  							{
+		| PLUS ExprAux %prec PRECEDENCE 			{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Plus",NULL);
 														addChild($$, $2);
 													}
 												}
-		| MINUS Expr  							{
+		| MINUS ExprAux %prec PRECEDENCE 			{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Minus",NULL);
 														addChild($$, $2);
 													}
 												}
-		| NOT Expr  							{
+		| NOT ExprAux %prec PRECEDENCE 			{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Not",NULL);
 														addChild($$, $2);

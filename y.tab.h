@@ -39,102 +39,102 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     STRLIT = 258,
-     REALLIT = 259,
-     DECLIT = 260,
-     BOOLLIT = 261,
-     ID = 262,
-     BOOL = 263,
-     INT = 264,
-     DOUBLE = 265,
-     RESERVED = 266,
-     CLASS = 267,
-     DO = 268,
-     DOTLENGTH = 269,
-     ELSE = 270,
-     IF = 271,
-     PARSEINT = 272,
-     PRINT = 273,
-     PUBLIC = 274,
-     RETURN = 275,
-     STATIC = 276,
-     STRING = 277,
-     VOID = 278,
-     WHILE = 279,
-     OCURV = 280,
-     CCURV = 281,
-     OBRACE = 282,
-     CBRACE = 283,
-     OSQUARE = 284,
-     CSQUARE = 285,
-     AND = 286,
-     OR = 287,
-     LT = 288,
-     GT = 289,
-     EQ = 290,
-     NEQ = 291,
-     LEQ = 292,
-     GEQ = 293,
-     PLUS = 294,
-     MINUS = 295,
-     STAR = 296,
-     DIV = 297,
-     MOD = 298,
-     NOT = 299,
-     ASSIGN = 300,
-     SEMI = 301,
-     COMMA = 302,
-     DOTLENGHT = 303,
+     PRECEDENCE = 258,
+     STRLIT = 259,
+     REALLIT = 260,
+     DECLIT = 261,
+     BOOLLIT = 262,
+     ID = 263,
+     BOOL = 264,
+     INT = 265,
+     DOUBLE = 266,
+     RESERVED = 267,
+     CLASS = 268,
+     DO = 269,
+     DOTLENGTH = 270,
+     ELSE = 271,
+     IF = 272,
+     PARSEINT = 273,
+     PRINT = 274,
+     PUBLIC = 275,
+     RETURN = 276,
+     STATIC = 277,
+     STRING = 278,
+     VOID = 279,
+     WHILE = 280,
+     OCURV = 281,
+     CCURV = 282,
+     OBRACE = 283,
+     CBRACE = 284,
+     OSQUARE = 285,
+     CSQUARE = 286,
+     AND = 287,
+     OR = 288,
+     LT = 289,
+     GT = 290,
+     EQ = 291,
+     NEQ = 292,
+     LEQ = 293,
+     GEQ = 294,
+     PLUS = 295,
+     MINUS = 296,
+     STAR = 297,
+     DIV = 298,
+     MOD = 299,
+     NOT = 300,
+     ASSIGN = 301,
+     SEMI = 302,
+     COMMA = 303,
      LOWER_THAN_ELSE = 304
    };
 #endif
 /* Tokens.  */
-#define STRLIT 258
-#define REALLIT 259
-#define DECLIT 260
-#define BOOLLIT 261
-#define ID 262
-#define BOOL 263
-#define INT 264
-#define DOUBLE 265
-#define RESERVED 266
-#define CLASS 267
-#define DO 268
-#define DOTLENGTH 269
-#define ELSE 270
-#define IF 271
-#define PARSEINT 272
-#define PRINT 273
-#define PUBLIC 274
-#define RETURN 275
-#define STATIC 276
-#define STRING 277
-#define VOID 278
-#define WHILE 279
-#define OCURV 280
-#define CCURV 281
-#define OBRACE 282
-#define CBRACE 283
-#define OSQUARE 284
-#define CSQUARE 285
-#define AND 286
-#define OR 287
-#define LT 288
-#define GT 289
-#define EQ 290
-#define NEQ 291
-#define LEQ 292
-#define GEQ 293
-#define PLUS 294
-#define MINUS 295
-#define STAR 296
-#define DIV 297
-#define MOD 298
-#define NOT 299
-#define ASSIGN 300
-#define SEMI 301
-#define COMMA 302
-#define DOTLENGHT 303
+#define PRECEDENCE 258
+#define STRLIT 259
+#define REALLIT 260
+#define DECLIT 261
+#define BOOLLIT 262
+#define ID 263
+#define BOOL 264
+#define INT 265
+#define DOUBLE 266
+#define RESERVED 267
+#define CLASS 268
+#define DO 269
+#define DOTLENGTH 270
+#define ELSE 271
+#define IF 272
+#define PARSEINT 273
+#define PRINT 274
+#define PUBLIC 275
+#define RETURN 276
+#define STATIC 277
+#define STRING 278
+#define VOID 279
+#define WHILE 280
+#define OCURV 281
+#define CCURV 282
+#define OBRACE 283
+#define CBRACE 284
+#define OSQUARE 285
+#define CSQUARE 286
+#define AND 287
+#define OR 288
+#define LT 289
+#define GT 290
+#define EQ 291
+#define NEQ 292
+#define LEQ 293
+#define GEQ 294
+#define PLUS 295
+#define MINUS 296
+#define STAR 297
+#define DIV 298
+#define MOD 299
+#define NOT 300
+#define ASSIGN 301
+#define SEMI 302
+#define COMMA 303
 #define LOWER_THAN_ELSE 304
 
 
@@ -142,7 +142,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 40 "jac.y"
+#line 38 "jac.y"
 {
     char* val;
     struct node* no;
