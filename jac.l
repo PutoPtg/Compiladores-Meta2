@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 1.9
+*Versão 2.0
 ************************************************************************************/
 
 %X COMMENT
