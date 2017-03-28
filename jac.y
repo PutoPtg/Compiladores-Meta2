@@ -15,7 +15,7 @@
 	#include "y.tab.h"
 
 	#include "tree.h"
-	//#define VAR (char*)calloc(1,sizeof(char))
+	#define VAR (char*)calloc(1,sizeof(char))
 
 	int yylex(void);
 	int yyerror(const char *s);
@@ -33,6 +33,9 @@
 	node* root;
 	node* aux;
 	node* aux2;
+	node* aux3;
+
+	char* auxType;
 %}
 
 %union{
@@ -106,22 +109,19 @@
 * Program → CLASS ID OBRACE { FieldDecl | MethodDecl | SEMI } CBRACE *
 **********************************************************************/
 Program: CLASS ID OBRACE CBRACE	{
-									if(contaErros == 0 && valorT == 1){
-										$$ = createNode(OTHER_node ,"Program", NULL);
-										aux = createNode(ID_node,"Id",$2);
-										free ($2);
-										addChild($$,aux);
-										addBrother(aux, aux2);
-										root = $$;
-									}
-
+										if(contaErros == 0 && valorT == 1){
+											$$ = createNode(OTHER_node, "Program", "");
+											aux = createNode(ID_node, "Id", $2);
+											addChild($$,aux);
+											root = $$;
+										}			
+	
 								}
 		| CLASS ID OBRACE InitDeclaration CBRACE	{
 														if(contaErros == 0 && valorT == 1){
-															$$ = createNode(OTHER_node ,"Program", NULL);
-															aux = createNode(ID_node,"Id",$2);
-															free ($2);
-															addChild($$, aux);
+															$$ = createNode(OTHER_node, "Program", "");
+															aux = createNode(ID_node, "Id", $2);
+															addChild($$,aux);
 															addBrother(aux,$4);
 															root = $$;
 														}
@@ -130,29 +130,26 @@ Program: CLASS ID OBRACE CBRACE	{
 
 InitDeclaration: FieldDecl						{
 													if(contaErros == 0 && valorT == 1){
-														$$ = createNode(OTHER_node, "FieldDecl", NULL);
-														addChild($$,$1);
+														$$ = $1;
 													}
 												}
 			| MethodDecl						{
 													if(contaErros == 0 && valorT == 1){
-														$$ = createNode(OTHER_node, "MethodDecl", NULL);
-														addChild($$,$1);
+														$$ = $1;
 													}
 												}
 			| SEMI								{;}
 			| InitDeclaration FieldDecl			{
 													if(contaErros == 0 && valorT == 1){
 														$$ = $1;
-														aux = createNode(OTHER_node, "FieldDecl", NULL);
-														addChild(aux,$2);
+														addBrother($$,$2);
 													}
+
 												}
 			| InitDeclaration MethodDecl		{
 													if(contaErros == 0 && valorT == 1){
 														$$ = $1;
-														aux = createNode(OTHER_node, "MethodDecl", NULL);
-														addChild(aux,$2);
+														addBrother($$,$2);
 													}
 												}
 			| InitDeclaration SEMI				{;}
@@ -162,38 +159,42 @@ InitDeclaration: FieldDecl						{
 * FieldDecl → PUBLIC STATIC Type ID { COMMA ID } SEMI				 *
 *********************************************************************/
 FieldDecl: PUBLIC STATIC Type ID SEMI				{
-														if (contaErros == 0 && valorT == 1){
-															$$ = $3;
+														if(contaErros == 0 && valorT == 1){
+															$$ = createNode(OTHER_node, "FieldDecl", "");
+															addChild($$,$3);
 															aux = createNode(ID_node, "Id", $4);
-															free ($4);
-															addBrother($$,aux);
+															addBrother($3,aux);
 														}
 													}
 			| PUBLIC STATIC Type ID CommaID SEMI	{
-														if (contaErros == 0 && valorT == 1){
-															$$ = $3;
+														if(contaErros == 0 && valorT == 1){
+															$$ = createNode(OTHER_node, "FieldDecl", "");
+															addChild($$,$3);
 															aux = createNode(ID_node, "Id", $4);
-															free ($4);
-															addBrother($$,aux);
-															addBrother(aux,$5);
-
+															addBrother($3,aux);
+															addBrother($$,$5);
 														}
 													}
 			| error SEMI							{;}
 			;
 
 CommaID: COMMA ID 						{
-											if (contaErros == 0 && valorT == 1){
-												$$ = createNode(ID_node, "Id", $2);
-												free ($2);
+											if(contaErros == 0 && valorT == 1){
+												$$ = createNode(OTHER_node, "FieldDecl", "");
+												aux = createNode(OTHER_node, auxType, "");
+												aux2 = createNode(ID_node, "Id", $2);
+												addChild($$,aux);
+												addBrother(aux,aux2);
+											}
 										}
-										}
-			| CommaID COMMA ID 			{
+			| COMMA ID CommaID			{
 											if (contaErros == 0 && valorT == 1){
-												$$ = $1;
-												aux = createNode(ID_node, "Id", $3);
-												free ($3);
-												addBrother($$,aux);
+												$$ = createNode(OTHER_node, "FieldDecl", "");
+												aux = createNode(OTHER_node, auxType, "");
+												aux2 = createNode(ID_node, "Id", $2);
+												addChild($$,aux);
+												addBrother(aux,aux2);
+												addBrother($$,$3);
 											}
 										}
 			;
@@ -203,11 +204,13 @@ CommaID: COMMA ID 						{
 * MethodDecl → PUBLIC STATIC MethodHeader MethodBody				 *
 *********************************************************************/
 MethodDecl: PUBLIC STATIC MethodHeader MethodBody		{
-															if (contaErros == 0 && valorT == 1){
-																$$ = createNode(OTHER_node, "MethodHeader", NULL);
-																aux2 = createNode(OTHER_node, "MethodBody", NULL);
-																addChild($$,$3);
-																addBrother($$, aux2);
+															if(contaErros == 0 && valorT == 1){
+																$$ = createNode(OTHER_node, "MethodDecl", "");
+																aux = createNode(OTHER_node, "MethodHeader", "");
+																aux2 = createNode(OTHER_node, "MethodBody", "");
+																addChild($$,aux);
+																addBrother(aux,aux2);
+																addChild(aux,$3);
 																addChild(aux2,$4);
 															}
 														}
@@ -218,41 +221,41 @@ MethodDecl: PUBLIC STATIC MethodHeader MethodBody		{
 * MethodHeader → ( Type | VOID ) ID OCURV [ FormalParams ] CCURV	 *
 *********************************************************************/
 MethodHeader: Type ID OCURV FormalParams CCURV		{
-														if (contaErros == 0 && valorT == 1){
+														if(contaErros == 0 && valorT == 1){
 															$$ = $1;
 															aux = createNode(ID_node, "Id", $2);
-															free ($2);
 															addBrother($$,aux);
-															aux2 = createNode(OTHER_node, "MethodParams", NULL);
-															addChild(aux2,$4);
+															aux2 = createNode(OTHER_node, "MethodParams", "");
 															addBrother(aux,aux2);
+															addChild(aux2,$4);
 														}
 													}
 			| Type ID OCURV CCURV					{
-														if (contaErros == 0 && valorT == 1){
+														if(contaErros == 0 && valorT == 1){
 															$$ = $1;
 															aux = createNode(ID_node, "Id", $2);
-															free ($2);
 															addBrother($$,aux);
-														}
-													}
-			| VOID ID OCURV FormalParams CCURV		{
-														if (contaErros == 0 && valorT == 1){
-															$$ = createNode(OTHER_node, "Void", NULL);
-															aux = createNode(ID_node, "Id", $2);
-															free ($2);
-															addBrother($$,aux);
-															aux2 = createNode(OTHER_node, "MethodParams", NULL);
-															addChild(aux2,$4);
+															aux2 = createNode(OTHER_node, "MethodParams", "");
 															addBrother(aux,aux2);
 														}
 													}
-			| VOID ID OCURV CCURV					{
-														if (contaErros == 0 && valorT == 1){
-															$$ = createNode(OTHER_node, "Void", NULL);
+			| VOID ID OCURV FormalParams CCURV		{
+														if(contaErros == 0 && valorT == 1){
+															$$ = createNode(OTHER_node, "Void", "");
 															aux = createNode(ID_node, "Id", $2);
-															free ($2);
 															addBrother($$,aux);
+															aux2 = createNode(OTHER_node, "MethodParams", "");
+															addBrother(aux,aux2);
+															addChild(aux2,$4);
+														}
+													}
+			| VOID ID OCURV CCURV					{
+														if(contaErros == 0 && valorT == 1){
+															$$ = createNode(OTHER_node, "Void", "");
+															aux = createNode(ID_node, "Id", $2);
+															addBrother($$,aux);
+															aux2 = createNode(OTHER_node, "MethodParams", "");
+															addBrother(aux,aux2);
 														}
 													}
 			;
@@ -261,36 +264,38 @@ MethodHeader: Type ID OCURV FormalParams CCURV		{
 /*********************************************************************
 * MethodBody → OBRACE { VarDecl | Statement } CBRACE				 *
 *********************************************************************/
-MethodBody: OBRACE CBRACE							{if (contaErros == 0 && valorT == 1){;}}
+MethodBody: OBRACE CBRACE							{
+														if(contaErros == 0 && valorT == 1){
+															$$ = NULL;
+														}
+													}
 			| OBRACE MethodParams CBRACE			{
-														if (contaErros == 0 && valorT == 1){
+														if(contaErros == 0 && valorT == 1){
 															$$ = $2;
 														}
 													}
 			;
 
 MethodParams: VarDecl								{
-														if (contaErros == 0 && valorT == 1){
-															$$ = createNode(OTHER_node, "VarDecl", NULL);
-															addChild($$,$1);
+														if(contaErros == 0 && valorT == 1){
+															$$ = $1;
 														}
 													}
 			| Statement								{
-														if (contaErros == 0 && valorT == 1){
+														if(contaErros == 0 && valorT == 1){
 															$$ = $1;
 														}
 													}
 			| MethodParams VarDecl					{
-														if (contaErros == 0 && valorT == 1){
+														if(contaErros == 0 && valorT == 1){
 															$$ = $1;
-															aux = createNode(OTHER_node, "VarDecl", NULL);
-															addChild(aux,$2);
+															addBrother($$,$2);
 														}
 													}
 			| MethodParams Statement				{
-														if (contaErros == 0 && valorT == 1){
+														if(contaErros == 0 && valorT == 1){
 															$$ = $1;
-															addChild($$,$2);
+															addBrother($$,$2);
 														}
 													}
 			;
@@ -302,8 +307,7 @@ MethodParams: VarDecl								{
 *********************************************************************/
 FormalParams: ParamDecl					{
 											if (contaErros == 0 && valorT == 1){
-												$$ = createNode(OTHER_node, "ParamDecl", NULL);
-												addChild($$,$1);
+												$$ = $1;
 											}
 										}
 			;
@@ -314,26 +318,25 @@ FormalParams: ParamDecl					{
 *********************************************************************/
 ParamDecl:	Type ID 								{
 														if (contaErros == 0 && valorT == 1){
-															$$ = $1;
+															$$ = createNode(OTHER_node, "ParamDecl", NULL);
+															addChild($$,$1);
 															aux = createNode(ID_node, "Id", $2);
-															free ($2);
-															addBrother($$,aux);
+															addBrother($1,aux);
 														}
 													}
 			| Type ID CommaTypeID					{
 														if (contaErros == 0 && valorT == 1){
-															$$ = $1;
+															$$ = createNode(OTHER_node, "ParamDecl", NULL);
+															addChild($$,$1);
 															aux = createNode(ID_node, "Id", $2);
-															free ($2);
-															addBrother($$,aux);
-															addBrother(aux,$3);
+															addBrother($1,aux);
+															addBrother($$,$3);
 														}
 													}
 			| STRING OSQUARE CSQUARE ID 			{
 														if (contaErros == 0 && valorT == 1){
-															$$ = createNode(OTHER_node, "StringArray", NULL);
+															$$ = createNode(OTHER_node, "StringArray", "");
 															aux = createNode(ID_node, "Id", $4);
-															free ($4);
 															addBrother($$,aux);
 														}
 													}
@@ -341,18 +344,19 @@ ParamDecl:	Type ID 								{
 
 CommaTypeID: COMMA Type ID 							{
 														if (contaErros == 0 && valorT == 1){
-															$$ = $2;
+															$$ = createNode(OTHER_node, "ParamDecl", NULL);
+															addChild($$,$2);
 															aux = createNode(ID_node, "Id", $3);
-															free ($3);
-															addBrother($$,aux);
+															addBrother($2,aux);
 														}
 													}
-			| CommaTypeID COMMA Type ID 			{
+			| COMMA Type ID CommaTypeID				{
 														if (contaErros == 0 && valorT == 1){
-															$$ = $3;
-															aux = createNode(ID_node, "Id", $4);
-															free ($4);
-															addBrother($$,aux);
+															$$ = createNode(OTHER_node, "ParamDecl", NULL);
+															addChild($$,$2);
+															aux = createNode(ID_node, "Id", $3);
+															addBrother($2,aux);
+															addBrother($$,$4);
 														}
 													}
 			;
@@ -361,35 +365,46 @@ CommaTypeID: COMMA Type ID 							{
 /*********************************************************************
 * VarDecl → Type ID { COMMA ID } SEMI 								 *
 *********************************************************************/
-VarDecl: Type ID VarBody SEMI							{
+VarDecl:  Type ID SEMI								{
 														if (contaErros == 0 && valorT == 1){
-															$$ = $1;
+															$$ = createNode(OTHER_node, "VarDecl", "");
+															addChild($$,$1);
 															aux = createNode(ID_node, "Id", $2);
-															free ($2);
-															addBrother($$,aux);
-															addBrother(aux,$3);
+															addBrother($1,aux);
+														}
+													}
+
+		| Type ID VarBody SEMI						{
+														if (contaErros == 0 && valorT == 1){
+															$$ = createNode(OTHER_node, "VarDecl", "");
+															addChild($$,$1);
+															aux = createNode(ID_node, "Id", $2);
+															addBrother($1,aux);
+															addBrother($$,$3);
 														}
 													}
 		;
 
 VarBody: COMMA ID 								{
 													if (contaErros == 0 && valorT == 1){
-														$$ = createNode(OTHER_node, "VarDecl", NULL);
-														aux = createNode(ID_node, "Id", $2);
-														free ($2);
+														$$ = createNode(OTHER_node, "VarDecl", "");
+														aux = createNode(OTHER_node, auxType, "");
+														aux2 = createNode(ID_node, "Id", $2);
 														addChild($$,aux);
+														addBrother(aux,aux2);
 													}
 												}
 
-		| VarBody COMMA ID						{
-														if (contaErros == 0 && valorT == 1){
-															$$ = $1;
-															aux = createNode(ID_node, "Id", $3);
-															free ($3);
-															addBrother($$,aux);
-
-														}
+		| COMMA ID VarBody						{
+													if (contaErros == 0 && valorT == 1){
+														$$ = createNode(OTHER_node, "VarDecl", "");
+														aux = createNode(OTHER_node, auxType, "");
+														aux2 = createNode(ID_node, "Id", $2);
+														addChild($$,aux);
+														addBrother(aux,aux2);
+														addBrother($$,$3);
 													}
+												}
 		;
 
 
@@ -399,16 +414,22 @@ VarBody: COMMA ID 								{
 Type: BOOL 											{
 														if (contaErros == 0 && valorT == 1){
 															$$ = createNode(OTHER_node, "Bool", NULL);
+															auxType = (char*)calloc(10,sizeof(char));
+															strncpy(auxType, "Bool", strlen("Bool"));
 														}
 													}
 	| INT 											{
 														if (contaErros == 0 && valorT == 1){
 															$$ = createNode(OTHER_node, "Int", NULL);
+															auxType = (char*)calloc(10,sizeof(char));
+															strncpy(auxType, "Int", strlen("Int"));
 														}
 													}
 	| DOUBLE 										{
 														if (contaErros == 0 && valorT == 1){
 															$$ = createNode(OTHER_node, "Double", NULL);
+															auxType = (char*)calloc(10,sizeof(char));
+															strncpy(auxType, "Double", strlen("Double"));
 														}
 													}
 	;
@@ -423,89 +444,52 @@ Type: BOOL 											{
 * Statement → [ ( Assignment | MethodInvocation | ParseArgs ) ] SEMI *
 * Statement → RETURN [ Expr ] SEMI									 *
 *********************************************************************/
-Statement: OBRACE CBRACE											{if (contaErros == 0 && valorT == 1){;}}
-		| OBRACE StatementList CBRACE								{
+Statement: OBRACE CBRACE											{
 																		if (contaErros == 0 && valorT == 1){
-																			$$ = $2;
+																			$$ = NULL;
 																		}
+																	}
+		| OBRACE StatementList CBRACE								{
+																		;
 																	}
 		| IF OCURV Expr CCURV Statement %prec LOWER_THAN_ELSE 		{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "If", NULL);
-																			addChild($$,$3);
-																			addBrother($3,$5);
-																		}
+																		;
 																	}
 		| IF OCURV Expr CCURV Statement ELSE Statement 				{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "If", NULL);
-																			addChild($$,$3);
-																			addBrother($3,$5);
-																			addBrother($5,$7);
-																		}
+																		;
 																	}
 		| WHILE OCURV Expr CCURV Statement 							{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "While", NULL);
-																			addChild($$,$3);
-																			addBrother($3,$5);
-																		}
+																		;
 																	}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 					{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "DoWhile", NULL);
-																			addChild($$,$2);
-																			addBrother($2,$5);
-																		}
+																		;
 																	}
 		| PRINT OCURV Expr CCURV SEMI 								{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "Print", NULL);
-																			addChild($$,$3);
-																		}
+																		;
 																	}
 		| PRINT OCURV STRLIT CCURV SEMI 							{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = createNode(OTHER_node, "Print", NULL);
-																			aux = createNode(STRLIT_node, "StrLit", $3);
-																			free ($3);
-																			addBrother($$,aux);
-																		}
+																		;
 																	}
 		| SEMI														{if (contaErros == 0 && valorT == 1){;}}
 		| Assignment SEMI											{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = $1;
-																		}
+																		;
 																	}
 		| MethodInvocation SEMI										{if (contaErros == 0 && valorT == 1){;}}
 		| ParseArgs SEMI											{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = $1;
-																		}
+																		;
 																	}
 		| RETURN SEMI												{if (contaErros == 0 && valorT == 1){;}}
 		| RETURN Expr SEMI											{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = $2;
-																		}
+																		;
 																	}
 		| error SEMI												{;}
 		;
 
 StatementList: 	Statement 					{
-												if (contaErros == 0 && valorT == 1){
-													$$ = createNode(OTHER_node, "Block", NULL);
-													addChild($$,$1);
-												}
+												;
 											}
 		|		StatementList Statement   	{
-												if (contaErros == 0 && valorT == 1){
-													$$ = $1;
-													aux = createNode(OTHER_node, "Block", NULL);
-													addChild(aux,$2);
-													addBrother($$,$2);
-												}
+												;
 											}
 		;
 
@@ -515,9 +499,8 @@ StatementList: 	Statement 					{
 *********************************************************************/
 Assignment: ID ASSIGN Expr 									{
 																if (contaErros == 0 && valorT == 1){
-																	$$ = createNode(OTHER_node, "Assign", NULL);
+																	$$ = createNode(OTHER_node, "Assign", "");
 																	aux = createNode(ID_node, "Id", $1);
-																	free ($1);
 																	addChild($$,aux);
 																	addBrother(aux,$3);
 																}
@@ -530,23 +513,13 @@ Assignment: ID ASSIGN Expr 									{
 MethodInvocation: ID OCURV CCURV							{
 																if (contaErros == 0 && valorT == 1){
 																	$$ = createNode(ID_node, "Id", $1);
-																	free($1);
 																}
 															}
 				| ID OCURV Expr CCURV						{
-																if (contaErros == 0 && valorT == 1){
-																	$$ = createNode(ID_node, "Id", $1);
-																	free($1);
-																	addBrother($$,$3);
-																}
+																;
 															}
 				| ID OCURV Expr CommaExpr CCURV				{
-																if (contaErros == 0 && valorT == 1){
-																	$$ = createNode(ID_node, "Id", $1);
-																	free($1);
-																	addBrother($$,$3);
-																	addBrother($3,$4);
-																}
+																;
 															}
 				| ID OCURV error CCURV						{;}
 				;
@@ -561,9 +534,8 @@ CommaExpr: COMMA Expr 									{if (contaErros == 0 && valorT == 1){;}}
 *********************************************************************/
 ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{
 																	if (contaErros == 0 && valorT == 1){
-																		$$ = createNode(OTHER_node, "ParseArgs", NULL);
+																		$$ = createNode(OTHER_node, "ParseArgs", "");
 																		aux = createNode(ID_node, "Id", $3);
-																		free ($3);
 																		addChild($$,aux);
 																		addBrother(aux,$5);
 																	}
@@ -583,8 +555,16 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{
 * Expr → BOOLLIT | DECLIT | REALLIT									 *
 *********************************************************************/
 
-Expr: Assignment								{;}
-	| ExprAux									{;}
+Expr: Assignment								{
+													if (contaErros == 0 && valorT == 1){
+														$$ = $1;
+													}
+												}
+	| ExprAux									{
+													if (contaErros == 0 && valorT == 1){
+														$$ = $1;
+													}
+												}
 	;
 
 ExprAux: MethodInvocation						{
@@ -596,106 +576,105 @@ ExprAux: MethodInvocation						{
 													if (contaErros == 0 && valorT == 1){
 														$$ = $1;
 													}
-
 												}
-		| ExprAux AND ExprAux 						{
+		| ExprAux AND ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "And", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux OR ExprAux 							{
+		| ExprAux OR ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Or", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux EQ ExprAux 							{
+		| ExprAux EQ ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Eq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux GEQ ExprAux 						{
+		| ExprAux GEQ ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Geq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux GT ExprAux							{
+		| ExprAux GT ExprAux					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Gt", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux LEQ ExprAux 						{
+		| ExprAux LEQ ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Leq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux LT ExprAux 							{
+		| ExprAux LT ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Lt", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux NEQ ExprAux 						{
+		| ExprAux NEQ ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Neq", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux PLUS ExprAux 						{
+		| ExprAux PLUS ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Add", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux MINUS ExprAux 						{
+		| ExprAux MINUS ExprAux 				{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Sub", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux STAR ExprAux 						{
+		| ExprAux STAR ExprAux 					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Mul", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux DIV ExprAux						{
+		| ExprAux DIV ExprAux					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Div", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| ExprAux MOD ExprAux						{
+		| ExprAux MOD ExprAux					{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Mod", NULL);
 														addChild($$,$1);
 														addChild($$,$3);
 													}
 												}
-		| PLUS ExprAux %prec PRECEDENCE 			{
+		| PLUS ExprAux %prec PRECEDENCE 		{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Plus",NULL);
 														addChild($$, $2);
 													}
 												}
-		| MINUS ExprAux %prec PRECEDENCE 			{
+		| MINUS ExprAux %prec PRECEDENCE 		{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Minus",NULL);
 														addChild($$, $2);
