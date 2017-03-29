@@ -6,18 +6,7 @@ class gcd {
 		if (a == 0)
 			System.out.println(b);
 		else {
-			while (b > 0)
-				if (a > b)
-					a = a-b;
-				else
-					b = b-a;
-			System.out.println(a);			
-		}
-
-		if(a = 5){
-		}
-		else{
-			System.out.println("Condition is false.");
+					
 		}
 	}
 }

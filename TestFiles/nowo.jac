@@ -1,7 +1,7 @@
 class raios {
 
 
-public static int  main (String args[){} //deteta
+public static int  main (String [] args){} //deteta
 public static boolean policia (){}
 public static double compiladores (){}
 public static void compGrafica (){
@@ -17,9 +17,8 @@ public static boolean cats;
 
 public static int fim (){}
 
-public static cats;
 
-public static int  mano ){}
-public static boolean police (String args[){} //não deteta!?
+public static int  mano (){}
+public static boolean police (String []args){} //não deteta!?
 
 }
