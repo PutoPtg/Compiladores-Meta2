@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.19																		*
+* Versão 0.20																		*
 ************************************************************************************/
 
 %{
@@ -471,14 +471,14 @@ Type: BOOL 											{
 * Statement → [ ( Assignment | MethodInvocation | ParseArgs ) ] SEMI *
 * Statement → RETURN [ Expr ] SEMI									 *
 *********************************************************************/
-Statement: OBRACE CBRACE											{
+Statement: OBRACE StatementList CBRACE								{
 																		if (contaErros == 0 && valorT == 1){
-																			$$ = NULL;
-																		}
-																	}
-		| OBRACE StatementList CBRACE								{
-																		if (contaErros == 0 && valorT == 1){
-																			$$ = $2;
+																			if($2 != NULL && $2->right != NULL){
+																				$$ = createNode(OTHER_node, "Block", "");
+																				addChild($$, $2);
+																			}else{
+																				$$ = $2;
+																			}
 																		}
 																	}
 		| IF OCURV Expr CCURV Statement %prec LOWER_THAN_ELSE 		{
@@ -631,15 +631,19 @@ Statement: OBRACE CBRACE											{
 		| error SEMI												{$$ = NULL; if (contaErros == 0 && valorT == 1) {clearTree(root);}}
 		;
 
-StatementList: 	Statement 					{
+StatementList: 								{$$ = NULL;}
+
+		|	Statement StatementList   	{
 												if (contaErros == 0 && valorT == 1){
-													$$ = $1;
-												}
-											}
-		|		StatementList Statement   	{
-												if (contaErros == 0 && valorT == 1){
-													$$ = $1;
-													addBrother($$,$2);
+													if($1 != NULL){
+														if($2 != NULL){
+															addBrother($1, $2);
+														}
+														$$ = $1;
+
+													}else{
+														$$ = $2;
+													}
 												}
 											}
 		;
