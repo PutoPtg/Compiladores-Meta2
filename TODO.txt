@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 0.03
+*Versão 0.04
 ************************************************************************************/
 
 
@@ -12,25 +12,31 @@
 Ficheiro - jac.y
 *************************************************************************************
 23-3-17
-TODO - O erro do "System.out.printf" tem a ver com o if<->else, o que quer que se meta após aquele else dá erro de sintaxe.
-
-TODO - A declaração de vários 'int' separados por virgulas não imprime conforme o enunciado - ver printscreen em anexo. Tentei resolver o problemas mas ainda não está conforme. PS: deixei as regras tais como tu tinhas.
-
+DONE - O erro do "System.out.printf" tem a ver com o if<->else, o que quer que se meta após aquele else dá erro de sintaxe.
+DONE - A declaração de vários 'int' separados por virgulas não imprime conforme o enunciado - ver printscreen em anexo. Tentei resolver o problemas mas ainda não está conforme. PS: deixei as regras tais como tu tinhas.
 DONE - restante árvore conforme enunciado.
 
 27-3-17
-TODO - Verificar se a Linha 748 é a solução ou se interpretei mal (Manuel)
-TODO - Resolver SegFault Na nos testes C e E
+DONE - Verificar se a Linha 748 é a solução ou se interpretei mal (Manuel)
+DONE - Resolver SegFault Na nos testes C e E
+
+30-3-17 - QUOTE "Não parece imprimir um erro lexical que não gere erros de syntax. Imprime a AST bem, mas não o erro lexical. Não está a colocar certas operações dentro de um Block quando este não é supérfluo."
+TODO - a última parte da resposta do profe.
 
 *************************************************************************************
 Ficheiro - jac.l
 *************************************************************************************
 23-3-17
-TODO - Algo anda mal nas colunas ainda pois não dá os 50 pontos nos B
+DONE - Algo anda mal nas colunas ainda pois não dá os 50 pontos nos B
 WARNING! - o ficheiro nas versões do 1.5 ao 1.7 DÁ ERRO DE STRLIT, NÂO USAR EM DEBUGS FUTUROS
-*************************************************************************************
-Ficheiro - jac.l
-*************************************************************************************
-273-17
 
-TODO - Resolver SegFault Na nos testes C e E
+30-3-17
+TODO - VERIFICAR VERSÃO e VERIFICAR variávelT
+
+*************************************************************************************
+Ficheiro - tree.c
+*************************************************************************************
+27-3-17
+DONE - Resolver SegFault Na nos testes C e E
+
+

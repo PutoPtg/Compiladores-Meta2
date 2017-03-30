@@ -4,7 +4,7 @@
 *Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática
 *Manuel Madeira Amado - 2006131282
 *Xavier Silva - 2013153577
-*Versão 2.0
+*Versão 2.0 -erro de certeza - 1.11 praí?
 ************************************************************************************/
 
 %X COMMENT
@@ -44,7 +44,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 %%
 
 "/*"								{BEGIN COMMENT;  commentPos[0] = contaLinha; commentPos[1] = contaColuna; contaColuna+=yyleng;}
-<COMMENT><<EOF>>					{if(valorT==0)printf("Line %lld, col %lld: unterminated comment\n", commentPos[0], commentPos[1]); contaColuna+=yyleng-1; BEGIN 0; } /*erro de unterminated comment*/
+<COMMENT><<EOF>>					{printf("Line %lld, col %lld: unterminated comment\n", commentPos[0], commentPos[1]); contaColuna+=yyleng-1; BEGIN 0; } /*erro de unterminated comment*/
 <COMMENT>"*/"						{contaColuna+=yyleng;BEGIN 0;} /*Comentário*/
 <COMMENT>\n|\r|\r\n 				{contaLinha++;contaColuna=1;}	/*incrementa linha*/
 <COMMENT>.							{contaColuna+=yyleng;}	/*incrementa coluna*/
@@ -57,10 +57,10 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 
 "\""								{BEGIN STR;  stringPos[0] = contaLinha; stringPos[1] = contaColuna; contaColuna+=yyleng;}
 <STR>{seqEscape}					{contaColuna+=yyleng;}
-<STR>\\.|\\							{if(valorT==0)printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext); contaColuna+=yyleng;}
-<STR><<EOF>>						{contaColuna+=yyleng; if(valorT==0)printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]); BEGIN 0;}
+<STR>\\.|\\							{printf("Line %lld, col %lld: invalid escape sequence (%s)\n",contaLinha,contaColuna,yytext); contaColuna+=yyleng;}
+<STR><<EOF>>						{contaColuna+=yyleng; printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]); BEGIN 0;}
 <STR>"\""							{contaColuna+=yyleng; BEGIN 0;}
-<STR>\n|\r|\r\n 					{contaLinha++; contaColuna=1; if(valorT==0)printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]); BEGIN 0;}
+<STR>\n|\r|\r\n 					{contaLinha++; contaColuna=1; printf("Line %lld, col %lld: unterminated string literal\n",stringPos[0],stringPos[1]); BEGIN 0;}
 <STR>.								{contaColuna+=yyleng;}
 
 {digito}"."{digito}{expoente}		{if(valorL==1){printf("REALLIT(%s)\n", yytext);}  contaColuna+=yyleng; if(valorNull==1 || valorT==1){ yylval.val = (char*)calloc(1+yyleng,sizeof(char)); strncpy(yylval.val,yytext,yyleng); return REALLIT;}}
@@ -118,7 +118,7 @@ expoente 	("e"|"E")("+"|"-")?{digito}+
 " "									{contaColuna+=1; }
 "\t"								{contaColuna+=1; }
 "\f"								{contaColuna+=1; }
-.									{ contaColuna++; if(valorT==0)printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna-yyleng,yytext); }
+.									{ contaColuna++; printf("Line %lld, col %lld: illegal character (%s)\n",contaLinha,contaColuna-yyleng,yytext); }
 
 
 %%

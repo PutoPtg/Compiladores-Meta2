@@ -4,7 +4,7 @@
 * Cadeira de Compiladores - 2017 - Licenciatura em Engenharia Informática			*
 * Manuel Madeira Amado - 2006131282													*
 * Xavier Silva - 2013153577															*
-* Versão 0.18																	*
+* Versão 0.19																		*
 ************************************************************************************/
 
 %{
@@ -114,8 +114,9 @@ Program: CLASS ID OBRACE CBRACE	{
 											aux = createNode(ID_node, "Id", $2);
 											addChild($$,aux);
 											root = $$;
-										}			
-	
+										}
+										free($2);
+
 								}
 		| CLASS ID OBRACE InitDeclaration CBRACE	{
 														if(contaErros == 0 && valorT == 1){
@@ -125,6 +126,7 @@ Program: CLASS ID OBRACE CBRACE	{
 															addBrother(aux,$4);
 															root = $$;
 														}
+														free($2);
 													}
 		;
 
@@ -173,6 +175,7 @@ FieldDecl: PUBLIC STATIC Type ID SEMI				{
 															aux = createNode(ID_node, "Id", $4);
 															addBrother($3,aux);
 														}
+														free($4);
 													}
 			| PUBLIC STATIC Type ID CommaID SEMI	{
 														if(contaErros == 0 && valorT == 1){
@@ -182,8 +185,9 @@ FieldDecl: PUBLIC STATIC Type ID SEMI				{
 															addChild($$,aux);
 															addBrother($$,$5);
 														}
+														free($4);
 													}
-			| error SEMI							{;}
+			| error SEMI							{$$ = NULL; if (contaErros == 0 && valorT == 1) {clearTree(root);}}
 			;
 
 CommaID: COMMA ID 						{
@@ -237,6 +241,7 @@ MethodHeader: Type ID OCURV FormalParams CCURV		{
 															addBrother(aux,aux2);
 															addChild(aux2,$4);
 														}
+														free($2);
 													}
 			| Type ID OCURV CCURV					{
 														if(contaErros == 0 && valorT == 1){
@@ -246,6 +251,7 @@ MethodHeader: Type ID OCURV FormalParams CCURV		{
 															aux2 = createNode(OTHER_node, "MethodParams", "");
 															addBrother(aux,aux2);
 														}
+														free($2);
 													}
 			| VOID ID OCURV FormalParams CCURV		{
 														if(contaErros == 0 && valorT == 1){
@@ -256,6 +262,7 @@ MethodHeader: Type ID OCURV FormalParams CCURV		{
 															addBrother(aux,aux2);
 															addChild(aux2,$4);
 														}
+														free($2);
 													}
 			| VOID ID OCURV CCURV					{
 														if(contaErros == 0 && valorT == 1){
@@ -265,6 +272,7 @@ MethodHeader: Type ID OCURV FormalParams CCURV		{
 															aux2 = createNode(OTHER_node, "MethodParams", "");
 															addBrother(aux,aux2);
 														}
+														free($2);
 													}
 			;
 
@@ -331,6 +339,7 @@ ParamDecl:	Type ID 								{
 															aux = createNode(ID_node, "Id", $2);
 															addBrother($1,aux);
 														}
+														free($2);
 													}
 			| Type ID CommaTypeID					{
 														if (contaErros == 0 && valorT == 1){
@@ -340,6 +349,7 @@ ParamDecl:	Type ID 								{
 															addBrother($1,aux);
 															addBrother($$,$3);
 														}
+														free($2);
 													}
 			| STRING OSQUARE CSQUARE ID 			{
 														if (contaErros == 0 && valorT == 1){
@@ -349,6 +359,7 @@ ParamDecl:	Type ID 								{
 															addChild($$,aux);
 															addChild($$,aux2);
 														}
+														free($4);
 													}
 			;
 
@@ -359,6 +370,7 @@ CommaTypeID: COMMA Type ID 							{
 															aux = createNode(ID_node, "Id", $3);
 															addBrother($2,aux);
 														}
+														free($3);
 													}
 			| COMMA Type ID CommaTypeID				{
 														if (contaErros == 0 && valorT == 1){
@@ -368,6 +380,7 @@ CommaTypeID: COMMA Type ID 							{
 															addBrother($2,aux);
 															addBrother($$,$4);
 														}
+														free($3);
 													}
 			;
 
@@ -382,6 +395,7 @@ VarDecl:  Type ID SEMI								{
 															aux = createNode(ID_node, "Id", $2);
 															addBrother($1,aux);
 														}
+														free($2);
 													}
 
 		| Type ID VarBody SEMI						{
@@ -392,6 +406,7 @@ VarDecl:  Type ID SEMI								{
 															addBrother($1,aux);
 															addBrother($$,$3);
 														}
+														free($2);
 													}
 		;
 
@@ -403,6 +418,7 @@ VarBody: COMMA ID 								{
 														addChild($$,aux);
 														addBrother(aux,aux2);
 													}
+													free($2);
 												}
 
 		| COMMA ID VarBody						{
@@ -414,6 +430,7 @@ VarBody: COMMA ID 								{
 														addBrother(aux,aux2);
 														addBrother($$,$3);
 													}
+													free($2);
 												}
 		;
 
@@ -484,7 +501,7 @@ Statement: OBRACE CBRACE											{
 																			}
 
 																			aux = createNode(OTHER_node, "Block", "");
-																			addChild($$,aux);	
+																			addChild($$,aux);
 																		}
 																	}
 		| IF OCURV Expr CCURV Statement ELSE Statement 				{
@@ -505,7 +522,7 @@ Statement: OBRACE CBRACE											{
 																				aux = createNode(OTHER_node, "Block", "");
 																				addChild($$,aux);
 																			}
-																			
+
 
 																			if($7 != NULL && $7->right != NULL){
 																				aux = createNode(OTHER_node, "Block", "");
@@ -520,7 +537,7 @@ Statement: OBRACE CBRACE											{
 																				aux = createNode(OTHER_node, "Block", "");
 																				addChild($$,aux);
 																			}
-																			
+
 																		}
 																	}
 		| WHILE OCURV Expr CCURV Statement 							{
@@ -541,7 +558,7 @@ Statement: OBRACE CBRACE											{
 																				aux = createNode(OTHER_node, "Block", "");
 																				addChild($$,aux);
 																			}
-																			
+
 																		}
 																	}
 		| DO Statement WHILE OCURV Expr CCURV SEMI 					{
@@ -577,6 +594,7 @@ Statement: OBRACE CBRACE											{
 																			aux = createNode(STRLIT_node, "Strlit", $3);
 																			addChild($$,aux);
 																		}
+																		free($3);
 																	}
 		| SEMI														{
 																		if (contaErros == 0 && valorT == 1){
@@ -610,7 +628,7 @@ Statement: OBRACE CBRACE											{
 																			addChild($$,$2);
 																		}
 																	}
-		| error SEMI												{;}
+		| error SEMI												{$$ = NULL; if (contaErros == 0 && valorT == 1) {clearTree(root);}}
 		;
 
 StatementList: 	Statement 					{
@@ -621,7 +639,7 @@ StatementList: 	Statement 					{
 		|		StatementList Statement   	{
 												if (contaErros == 0 && valorT == 1){
 													$$ = $1;
-													addBrother($$,$2);								
+													addBrother($$,$2);
 												}
 											}
 		;
@@ -637,6 +655,7 @@ Assignment: ID ASSIGN Expr 									{
 																	addChild($$,aux);
 																	addChild($$,$3);
 																}
+																free($1);
 															}
 
 
@@ -649,6 +668,7 @@ MethodInvocation: ID OCURV CCURV							{
 																	aux = createNode(ID_node, "Id", $1);
 																	addChild($$,aux);
 																}
+																free($1);
 															}
 				| ID OCURV Expr CCURV						{
 																if (contaErros == 0 && valorT == 1){
@@ -657,6 +677,7 @@ MethodInvocation: ID OCURV CCURV							{
 																	addChild($$,aux);
 																	addBrother(aux,$3);
 																}
+																free($1);
 															}
 				| ID OCURV Expr CommaExpr CCURV				{
 																if (contaErros == 0 && valorT == 1){
@@ -666,8 +687,9 @@ MethodInvocation: ID OCURV CCURV							{
 																	addBrother(aux,$3);
 																	addBrother(aux,$4);
 																}
+																free($1);
 															}
-				| ID OCURV error CCURV						{;}
+				| ID OCURV error CCURV						{$$ = NULL; if (contaErros == 0 && valorT == 1) {clearTree(root);}}
 				;
 
 CommaExpr: COMMA Expr 									{
@@ -694,8 +716,9 @@ ParseArgs: PARSEINT OCURV ID OSQUARE Expr CSQUARE CCURV			{
 																		addChild($$,aux);
 																		addChild($$,$5);
 																	}
+																	free($3);
 																}
-		| PARSEINT OCURV error CCURV							{;}
+		| PARSEINT OCURV error CCURV							{$$ = NULL; if (contaErros == 0 && valorT == 1) {clearTree(root);}}
 		;
 
 
@@ -844,16 +867,16 @@ ExprAux: MethodInvocation						{
 		| ID 									{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(ID_node, "Id",$1);
-														free($1);
 													}
+													free($1);
 												}
 		| ID DOTLENGTH 							{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(OTHER_node, "Length", "");
 														aux = createNode(ID_node, "Id",$1);
-														free($1);
 														addChild($$,aux);
 													}
+													free($1);
 												}
 		| OCURV Expr CCURV 						{
 													if (contaErros == 0 && valorT == 1){
@@ -863,22 +886,22 @@ ExprAux: MethodInvocation						{
 		| BOOLLIT 								{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(BOOLLIT_node, "BoolLit",$1);
-														free ($1);
 													}
+													free ($1);
 												}
 		| DECLIT 								{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(DECLIT_node, "DecLit",$1);
-														free ($1);
 													}
+													free ($1);
 												}
 		| REALLIT								{
 													if (contaErros == 0 && valorT == 1){
 														$$ = createNode(REALLIT_node, "RealLit",$1);
-														free ($1);
 													}
+													free ($1);
 												}
-		| OCURV error CCURV						{;}
+		| OCURV error CCURV						{if (contaErros == 0 && valorT == 1) {clearTree(root);}}
 		;
 
 %%
@@ -887,6 +910,7 @@ ExprAux: MethodInvocation						{
 int yyerror(const char *s){
 	printf("Line %lld, col %lld: %s: %s\n", contaLinha, contaColuna-strlen(yytext), s, yytext);
 	contaErros++;
+	clearTree(root);
     return 0;
 }
 
@@ -916,6 +940,7 @@ int main(int argc, char *argv[])
     	printTree(root, 0);
     }
     clearTree(root);
+    free(auxType);
 
     return 0;
 }
